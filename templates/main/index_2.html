@@ -1,0 +1,846 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titre %}C.I.M.P.P – Centre International de Mission Prophétique et de la Parole{% endblock titre %}
+{% block extra_css %}
+<style>
+  /* === MODAL EVENEMENT === */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.60);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  animation: slideUp 0.3s ease;
+  position: relative;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #555;
+  z-index: 10;
+  line-height: 1;
+}
+
+.modal-close:hover { color: #e00; }
+
+.modal-img {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+.modal-img[src=""] {
+  display: none;   /* Cache l'image si elle est vide */
+}
+
+.modal-body {
+  padding: 1.2rem 1.5rem 1.5rem;
+}
+
+.modal-body h2 {
+  margin: 0 0 0.6rem;
+  font-size: 1.3rem;
+  color: #1a1a2e;
+}
+
+.modal-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #555;
+  font-size: 0.95rem;
+  margin: 0.3rem 0;
+}
+
+.modal-body hr {
+  margin: 0.9rem 0;
+  border: none;
+  border-top: 1px solid #eee;
+}
+
+#modal-description {
+  color: #444;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Curseur pointer sur les cartes */
+.evenement-card {
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.evenement-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+</style>
+{% endblock extra_css %}
+{% block content %}
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <header id="hero" role="banner">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <i class="fa-solid fa-location-dot"></i> Ouagadougou, Burkina Faso
+        </div>
+        <h1 class="hero-title">
+          La Parole de Dieu
+          <span class="accent">Transforme nos Vies</span>
+        </h1>
+        <p class="hero-verse">
+          « …moi, je suis venu afin que les brebis aient la vie, et qu'elles soient dans l'abondance. » — Jean 10:10
+        </p>
+        <p class="hero-description">
+          Bienvenue au Centre International de Mission Prophétique et de la Parole. Une communauté de foi, d'amour et de puissance divine, rassemblée pour adorer, grandir et impacter le monde.
+        </p>
+        <div class="hero-actions">
+          <a href="#predications" class="btn btn-primary">
+            <i class="fa-solid fa-microphone"></i> Découvrir nos prédications
+          </a>
+          <a href="#programme" class="btn btn-outline">
+            <i class="fa-regular fa-calendar"></i> Programme hebdomadaire
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll" aria-hidden="true">Défiler</div>
+  </header>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item fade-in">
+          <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+          <span class="stat-number">500+</span>
+          <span class="stat-label">Membres Actifs</span>
+        </div>
+        <div class="stat-item fade-in fade-in-delay-1">
+          <div class="stat-icon"><i class="fa-solid fa-cross"></i></div>
+          <span class="stat-number">15+</span>
+          <span class="stat-label">Années de Ministère</span>
+        </div>
+        <div class="stat-item fade-in fade-in-delay-2">
+          <div class="stat-icon"><i class="fa-solid fa-hand-holding-heart"></i></div>
+          <span class="stat-number">12</span>
+          <span class="stat-label">Cellules de Prière</span>
+        </div>
+        <div class="stat-item fade-in fade-in-delay-3">
+          <div class="stat-icon"><i class="fa-solid fa-church"></i></div>
+          <span class="stat-number">3</span>
+          <span class="stat-label">Cultes par Semaine</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       A PROPOS
+  ============================================================ -->
+  <section id="apropos" aria-labelledby="apropos-title">
+    <div class="container">
+      <div class="apropos-grid">
+        <div class="apropos-image fade-in">
+          <img src="{% static 'image/cimpp.jpg' %}" alt="Assemblée en adoration" loading="lazy" />
+          <span class="apropos-image-badge">Jean 10:10</span>
+        </div>
+        <div class="apropos-text fade-in fade-in-delay-1">
+          <span class="section-tag">Notre Histoire</span>
+          <h2 class="section-title" id="apropos-title">Qui sommes-nous ?</h2>
+          <p>Le <strong>Centre International de Mission Prophétique et de la Parole (C.I.M.P.P)</strong> est une église évangélique fondée sur la Parole de Dieu et animée par l'Esprit Saint, basée à Ouagadougou, Burkina Faso.</p>
+          <p>Notre vision est d'être un centre rayonnant de la gloire divine, où chaque âme trouve rédemption, guérison et destinée. Nous croyons fermement en la prophétie, la puissance de la prière et l'abondance que Christ est venu apporter.</p>
+          <p>Fondée sur Jean 10:10, notre église est un lieu de transformation, d'équipement des saints et d'envoi missionnaire vers toutes les nations.</p>
+          <div class="values-grid">
+            <div class="value-item">
+              <div class="value-icon"><i class="fa-solid fa-dove"></i></div>
+              <div class="value-text"><strong>Foi &amp; Prière</strong><span>La prière comme fondation</span></div>
+            </div>
+            <div class="value-item">
+              <div class="value-icon"><i class="fa-solid fa-book-bible"></i></div>
+              <div class="value-text"><strong>La Parole</strong><span>Fondés sur la Bible</span></div>
+            </div>
+            <div class="value-item">
+              <div class="value-icon"><i class="fa-solid fa-handshake"></i></div>
+              <div class="value-text"><strong>Communauté</strong><span>Unis en Christ</span></div>
+            </div>
+            <div class="value-item">
+              <div class="value-icon"><i class="fa-solid fa-earth-africa"></i></div>
+              <div class="value-text"><strong>Mission</strong><span>Évangéliser les nations</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="leaders-section">
+        <span class="section-tag">Leadership</span>
+        <h2 class="section-title">Nos Bergers &amp; Dirigeants</h2>
+        <div class="leaders-grid">
+          <article class="leader-card fade-in">
+            <img src="{% static 'image/img5.jpg' %}" alt="Pasteur Principal" class="leader-image" loading="lazy" />
+            <div class="leader-info">
+              <div class="leader-role">Prophète </div>
+              <h3 class="leader-name">Prophète Natama Patrice </h3>
+              <p class="leader-bio">Prophète de Dieu depuis plus de 20 ans, visionnaire et enseignant de la Parole avec onction et autorité spirituelle.</p>
+              <span class="leader-badge"><i class="fa-solid fa-star"></i> Fondateur CIMPP</span>
+            </div>
+          </article>
+          <article class="leader-card fade-in fade-in-delay-1">
+            <img src="{% static 'image/img4.jpg' %}" alt="Prophète" class="leader-image" loading="lazy" />
+            <div class="leader-info">
+              <div class="leader-role">Pasteur Principal</div>
+              <h3 class="leader-name">Pasteur Konombo</h3>
+              <p class="leader-bio">Prophète de Dieu portant le mandat de révéler la volonté divine et d'équiper les saints pour l'œuvre du ministère.</p>
+              <span class="leader-badge"><i class="fa-solid fa-bolt"></i> Don Pastoral</span>
+            </div>
+          </article>
+          <article class="leader-card fade-in fade-in-delay-2">
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80" alt="Pasteure Adjointe" class="leader-image" loading="lazy" />
+            <div class="leader-info">
+              <div class="leader-role">Pasteure Adjointe</div>
+              <h3 class="leader-name">Pasteure Marie-Claire O.</h3>
+              <p class="leader-bio">Responsable de la louange, du département des femmes et coordinatrice du programme de formation biblique.</p>
+              <span class="leader-badge"><i class="fa-solid fa-heart"></i> Ministère des Femmes</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PREDICATIONS
+  ============================================================ -->
+  <section id="predications" aria-labelledby="predications-title">
+    <div class="container">
+      <span class="section-tag">Séquences Bibliques</span>
+      <h2 class="section-title" id="predications-title">Nos Prédications</h2>
+      <p class="section-subtitle">Des messages puissants et transformateurs, nourris de la Parole de Dieu pour édifier votre foi.</p>
+
+      <div class="predications-grid">
+        {% for predication in predications %}
+        <article class="predication-card fade-in">
+          <img src="{{ predication.img_couverture.url }}" alt="{{ predication.titre }}" class="predication-img" loading="lazy" />
+          <div class="predication-body">
+            <div class="predication-tag"><i class="fa-solid fa-book-open"></i> Évangile de Jean</div>
+            <h3 class="predication-title">{{ predication.titre }}</h3>
+            <p class="predication-verse">« {{predication.verset_principal}} » —</p>
+            <div class="predication-rating">
+              <span class="author">—{{ predication.predicateur }}—</span>
+              <a href="{% url 'main:predications' slug=predication.slug %}" class="btn ">En Savoir Plus <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+
+      <div class="live-section fade-in">
+        <div class="live-header">
+          <h3 class="live-title">
+            <i class="fa-brands fa-youtube" style="color:var(--detail-red);"></i> Directs &amp; Replays des Cultes
+          </h3>
+          <div class="live-badge">
+            <i class="fa-solid fa-circle" style="font-size:0.5rem;"></i> EN DIRECT
+          </div>
+        </div>
+        <div class="iframe-wrapper">
+          <div onclick="openVideo()">
+            <img src="https://img.youtube.com/vi/-QBVApZLGp4/0.jpg" width="100%">
+          </div>
+          <div id="videoModal" style="display:none;">
+            <iframe width="750" height="315" src="https://www.youtube-nocookie.com/embed/-QBVApZLGp4?si=_ZDD7_ovsHPB-paF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          </div>
+          <script>
+            function openVideo() {
+              document.getElementById("videoModal").style.display = "block";
+            }
+          </script>
+        </div>
+        <p class="live-note">
+          <i class="fa-solid fa-circle-info"></i>
+          Rejoignez-nous en direct chaque dimanche à 09h00 (GMT+0). Abonnez-vous pour ne manquer aucun message.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PROGRAMME HEBDOMADAIRE
+  ============================================================ -->
+  <section id="programme" aria-labelledby="programme-title">
+    <div class="container">
+      <span class="section-tag">Agenda</span>
+      <h2 class="section-title" id="programme-title">Programme Hebdomadaire</h2>
+      <p class="section-subtitle">Rejoignez-nous à chaque réunion pour grandir ensemble dans la Parole et l'Esprit.</p>
+
+      <div class="programme-wrapper fade-in">
+        <table role="table" aria-label="Programme hebdomadaire CIMPP">
+          <thead>
+            <tr>
+              <th scope="col"><i class="fa-solid fa-calendar-week" style="margin-right:6px;color:var(--accent-yellow);"></i>Jour</th>
+              <th scope="col"><i class="fa-regular fa-clock" style="margin-right:6px;color:var(--accent-yellow);"></i>Horaire</th>
+              <th scope="col"><i class="fa-solid fa-list-check" style="margin-right:6px;color:var(--accent-yellow);"></i>Activité</th>
+              <th scope="col"><i class="fa-solid fa-location-pin" style="margin-right:6px;color:var(--accent-yellow);"></i>Lieu</th>
+              <th scope="col"><i class="fa-solid fa-user-tie" style="margin-right:6px;color:var(--accent-yellow);"></i>Responsable</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Lundi</td><td>18h00 – 19h30</td><td><span class="badge-activite"><i class="fa-solid fa-hands-praying"></i> Prière du soir</span></td><td>Salle de Prière</td><td>Département Intercession</td></tr>
+            <tr><td>Mardi</td><td>17h30 – 19h00</td><td><span class="badge-activite"><i class="fa-solid fa-book-open"></i> Étude Biblique</span></td><td>Grande Salle</td><td>Pasteur Emmanuel K.</td></tr>
+            <tr><td>Mercredi</td><td>18h00 – 20h00</td><td><span class="badge-activite badge-special"><i class="fa-solid fa-fire"></i> Veillée de Prière</span></td><td>Temple Principal</td><td>Prophète Samuel D.</td></tr>
+            <tr><td>Jeudi</td><td>17h00 – 18h30</td><td><span class="badge-activite"><i class="fa-solid fa-venus"></i> Réunion des Femmes</span></td><td>Salle Annexe</td><td>Pasteure Marie-Claire O.</td></tr>
+            <tr><td>Vendredi</td><td>18h00 – 19h30</td><td><span class="badge-activite"><i class="fa-solid fa-music"></i> Répétition Louange</span></td><td>Salle de Musique</td><td>Équipe Worship</td></tr>
+            <tr><td>Samedi</td><td>15h00 – 17h00</td><td><span class="badge-activite"><i class="fa-solid fa-child"></i> École du Dimanche (Prép.)</span></td><td>Classe Enfants</td><td>Département Jeunesse</td></tr>
+            <tr><td><strong>Dimanche</strong></td><td><strong>09h00 – 12h30</strong></td><td><span class="badge-activite badge-special"><i class="fa-solid fa-church"></i> Culte Principal</span></td><td><strong>Temple Principal</strong></td><td>Pasteur Emmanuel K.</td></tr>
+            <tr><td>Dimanche</td><td>15h00 – 17h00</td><td><span class="badge-activite"><i class="fa-solid fa-graduation-cap"></i> Formation Disciples</span></td><td>Grande Salle</td><td>Équipe Pastorale</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       EVENEMENTS
+  ============================================================ -->
+  <section id="evenements" aria-labelledby="evenements-title">
+    <div class="container">
+      <span class="section-tag">Agenda 2025</span>
+      <h2 class="section-title" id="evenements-title">Événements à Venir</h2>
+      <p class="section-subtitle">Ne manquez aucun moment de grâce et de renouveau spirituel.</p>
+
+      <div class="evenements-grid">
+
+        <!-- Événements dynamiques depuis la base de données -->
+        {% for event in events %}
+        <article class="evenement-card fade-in"
+                 data-event-name="{{ event.name }}"
+                 data-event-date="{{ event.date|date:'d M Y à H:i' }}"
+                 data-event-lieu="{{ event.lieu|default:'Eglise CIMPP' }}"
+                 data-event-description="{{ event.description }}"
+                 data-event-image="{% if event.image %}{{ event.image.url }}{% endif %}">
+          <img src="{{ event.image.url }}" alt="{{ event.name }}" loading="lazy" />
+          <div class="evenement-overlay">
+            <div class="evenement-date">
+              <span class="day">{{ event.date|date:"d" }}</span>
+              <span class="month">{{ event.date|date:"M" }}</span>
+            </div>
+            <h3 class="evenement-title">{{ event.name }}</h3>
+            <p class="evenement-lieu"><i class="fa-solid fa-location-dot"></i> {{ event.lieu|default:"Eglise CIMPP" }}</p>
+          </div>
+        </article>
+        {% endfor %}
+
+        <!-- Événements statiques -->
+        <article class="evenement-card fade-in fade-in-delay-1">
+          <img src="{% static 'image/img2.jpg' %}" alt="Retraite Spirituelle" loading="lazy" />
+          <div class="evenement-overlay">
+            <div class="evenement-date"><span class="day">08</span><span class="month">Mai</span></div>
+            <h3 class="evenement-title">Retraite Spirituelle des Leaders</h3>
+            <p class="evenement-lieu"><i class="fa-solid fa-location-dot"></i> Centre de Retraite, Ouagadougou</p>
+          </div>
+        </article>
+
+        <article class="evenement-card fade-in fade-in-delay-2">
+          <img src="{% static 'image/img1.jpg' %}" alt="Nuit de Délivrance" loading="lazy" />
+          <div class="evenement-overlay">
+            <div class="evenement-date"><span class="day">30</span><span class="month">Mai</span></div>
+            <h3 class="evenement-title">Grande Nuit de Délivrance &amp; Guérison</h3>
+            <p class="evenement-lieu"><i class="fa-solid fa-location-dot"></i> Temple Principal CIMPP</p>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- ======================================================
+           MODAL ÉVÉNEMENT
+      ====================================================== -->
+      <style>
+        /* Fond sombre */
+        .modal-evenement {
+          display: none;
+          position: fixed;
+          z-index: 2000;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.75);
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+          backdrop-filter: blur(4px);
+        }
+
+        .modal-evenement.is-open {
+          display: flex;
+        }
+
+        /* Boîte centrale */
+        .modal-evenement__box {
+          background: #fff;
+          border-radius: 16px;
+          width: 90%;
+          max-width: 580px;
+          max-height: 88vh;
+          overflow-y: auto;
+          position: relative;
+          box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+          animation: modalSlideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalSlideUp {
+          from { transform: translateY(50px) scale(0.95); opacity: 0; }
+          to   { transform: translateY(0)    scale(1);    opacity: 1; }
+        }
+
+        /* Bouton fermeture */
+        .modal-evenement__close {
+          position: absolute;
+          top: 14px;
+          right: 16px;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.9);
+          border: none;
+          font-size: 1.4rem;
+          line-height: 1;
+          cursor: pointer;
+          color: #333;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+          transition: background 0.2s, color 0.2s;
+        }
+
+        .modal-evenement__close:hover {
+          background: #e74c3c;
+          color: #fff;
+        }
+
+        /* Image */
+        .modal-evenement__img {
+          width: 100%;
+          height: 220px;
+          object-fit: cover;
+          border-radius: 16px 16px 0 0;
+          display: block;
+        }
+
+        .modal-evenement__img[src=""] {
+          display: none;
+        }
+
+        /* Corps */
+        .modal-evenement__body {
+          padding: 1.4rem 1.6rem 1.8rem;
+        }
+
+        .modal-evenement__title {
+          font-size: 1.35rem;
+          font-weight: 700;
+          color: #1a1a2e;
+          margin: 0 0 1rem 0;
+          padding-right: 2rem;
+          line-height: 1.3;
+        }
+
+        .modal-evenement__meta {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.95rem;
+          margin: 0.45rem 0;
+        }
+
+        .modal-evenement__meta--date {
+          color: #e67e22;
+          font-weight: 600;
+        }
+
+        .modal-evenement__meta--lieu {
+          color: #2980b9;
+        }
+
+        .modal-evenement__meta i {
+          width: 18px;
+          text-align: center;
+          flex-shrink: 0;
+        }
+
+        .modal-evenement__divider {
+          border: none;
+          border-top: 1px solid #eee;
+          margin: 1rem 0;
+        }
+
+        .modal-evenement__description {
+          color: #444;
+          font-size: 0.95rem;
+          line-height: 1.75;
+          white-space: pre-line;
+          margin: 0;
+        }
+
+        /* Curseur pointer sur les cartes dynamiques */
+        .evenement-card[data-event-name] {
+          cursor: pointer;
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .evenement-card[data-event-name]:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+        }
+      </style>
+
+      <div id="eventModal" class="modal-evenement" role="dialog" aria-modal="true" aria-labelledby="modalEventTitle">
+        <div class="modal-evenement__box">
+          <button class="modal-evenement__close" id="eventModalClose" aria-label="Fermer">&times;</button>
+          <img id="modalImage" class="modal-evenement__img" src="" alt="" />
+          <div class="modal-evenement__body">
+            <h2 class="modal-evenement__title" id="modalEventTitle"></h2>
+            <p class="modal-evenement__meta modal-evenement__meta--date">
+              <i class="fa-regular fa-calendar"></i>
+              <span id="modalDate"></span>
+            </p>
+            <p class="modal-evenement__meta modal-evenement__meta--lieu">
+              <i class="fa-solid fa-location-dot"></i>
+              <span id="modalLieu"></span>
+            </p>
+            <hr class="modal-evenement__divider">
+            <p class="modal-evenement__description" id="modalDescription"></p>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          const modal      = document.getElementById('eventModal');
+          const closeBtn   = document.getElementById('eventModalClose');
+          const imgEl      = document.getElementById('modalImage');
+          const titleEl    = document.getElementById('modalEventTitle');
+          const dateEl     = document.getElementById('modalDate');
+          const lieuEl     = document.getElementById('modalLieu');
+          const descEl     = document.getElementById('modalDescription');
+
+          /* Ouvrir le modal */
+          document.querySelectorAll('.evenement-card[data-event-name]').forEach(function (card) {
+            card.addEventListener('click', function () {
+              titleEl.textContent = this.dataset.eventName   || '';
+              dateEl.textContent  = this.dataset.eventDate   || '';
+              lieuEl.textContent  = this.dataset.eventLieu   || 'Eglise CIMPP';
+              descEl.textContent  = this.dataset.eventDescription || '';
+
+              const imgSrc = this.dataset.eventImage || '';
+              imgEl.src = imgSrc;
+              imgEl.alt = this.dataset.eventName || '';
+
+              modal.classList.add('is-open');
+              document.body.style.overflow = 'hidden';
+            });
+          });
+
+          /* Fermer — bouton × */
+          closeBtn.addEventListener('click', fermer);
+
+          /* Fermer — clic sur le fond sombre */
+          modal.addEventListener('click', function (e) {
+            if (e.target === modal) fermer();
+          });
+
+          /* Fermer — touche Échap */
+          document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') fermer();
+          });
+
+          function fermer() {
+            modal.classList.remove('is-open');
+            document.body.style.overflow = '';
+            imgEl.src = '';
+          }
+        })();
+      </script>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       GALERIE
+  ============================================================ -->
+  <section id="galerie" aria-labelledby="galerie-title">
+    <div class="container">
+      <span class="section-tag">Moments de Grâce</span>
+      <h2 class="section-title" id="galerie-title">Galerie Photos</h2>
+      <p class="section-subtitle">Des instants précieux de louange, de prière et de communion fraternelle.</p>
+      <div class="galerie-grid">
+        <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&q=80" alt="Culte principal" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+        <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1526510747491-58f928ec870f?w=400&q=80" alt="Prière collective" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+        <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1485872299829-c673f5194813?w=400&q=80" alt="Louange" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+        <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=400&q=80" alt="Baptême" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+        <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1445633629932-0029acc44e88?w=400&q=80" alt="Conférence" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+        <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80" alt="Jeunesse" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VERSET DU JOUR
+  ============================================================ -->
+  <section id="verset" aria-labelledby="verset-title">
+    <div class="container">
+      <div class="verset-card fade-in">
+        <span class="verset-label" id="verset-title">
+          <i class="fa-solid fa-cross"></i> &nbsp;Inspiration Divine – Verset du Jour&nbsp; <i class="fa-solid fa-cross"></i>
+        </span>
+        <blockquote class="verset-quote">
+          <i class="fa-solid fa-quote-left"></i>
+          Le Seigneur est mon berger : je ne manquerai de rien. Il me fait reposer dans de verts pâturages, il me dirige vers des eaux paisibles.
+          <i class="fa-solid fa-quote-right"></i>
+        </blockquote>
+        <div class="verset-divider"></div>
+        <p class="verset-reference"><i class="fa-solid fa-book-bible"></i> &nbsp; Psaumes 23 : 1-2</p>
+        <p class="verset-context">Méditez cette Parole aujourd'hui et laissez le Berger d'Israël guider vos pas dans Sa parfaite volonté.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TEMOIGNAGES & FORMULAIRE
+  ============================================================ -->
+  <section id="temoignages" aria-labelledby="temoignages-title">
+    <div class="container">
+      <div class="temoignages-layout">
+        <div class="temoignages-intro">
+          <span class="section-tag">Grâce Témoignée</span>
+          <h2 class="section-title" id="temoignages-title">Ce que Dieu fait dans nos vies</h2>
+          <p class="section-subtitle">La gloire de Dieu se manifeste à travers les témoignages de notre assemblée.</p>
+          <div class="temoignage-quote fade-in">
+            <i class="fa-solid fa-quote-left"></i>
+            <p class="temoignage-text">Après des années d'infertilité, Dieu m'a accordé le miracle de la maternité grâce aux prières de cette assemblée. Gloire à Dieu !</p>
+            <p class="temoignage-author"><i class="fa-solid fa-user-circle"></i> Sœur Aminata B. — Membre depuis 2018</p>
+          </div>
+          <div class="temoignage-quote fade-in fade-in-delay-1">
+            <i class="fa-solid fa-quote-left"></i>
+            <p class="temoignage-text">J'ai été guéri d'une maladie que les médecins jugeaient incurable. Le Seigneur est intervenu lors de la nuit de délivrance. Alléluia !</p>
+            <p class="temoignage-author"><i class="fa-solid fa-user-circle"></i> Frère Oumar S. — Membre depuis 2020</p>
+          </div>
+          <div class="temoignage-quote fade-in fade-in-delay-2">
+            <i class="fa-solid fa-quote-left"></i>
+            <p class="temoignage-text">Ma famille était brisée, mes finances détruites. Après 3 mois de prière intensive au CIMPP, Dieu a tout restauré. Béni soit Son Nom !</p>
+            <p class="temoignage-author"><i class="fa-solid fa-user-circle"></i> Frère Théophile K. — Membre depuis 2022</p>
+          </div>
+        </div>
+
+        <div class="form-card fade-in fade-in-delay-1">
+          <h3 class="form-title">Partagez votre Témoignage</h3>
+          <p class="form-subtitle">Votre témoignage glorifie Dieu et fortifie la foi de vos frères et sœurs.</p>
+          <form id="temoignageForm" method="post" action="{% url 'main:submit_temoignage' %}" novalidate>
+            {% csrf_token %}
+            <div class="form-row">
+              <div class="form-group">
+                <label for="prenom"><i class="fa-solid fa-user"></i> Prénom *</label>
+                <input type="text" id="prenom" name="prenom" placeholder="Marie" autocomplete="given-name" />
+                <p class="form-error" id="prenom-error"><i class="fa-solid fa-triangle-exclamation"></i> Le prénom est requis.</p>
+              </div>
+              <div class="form-group">
+                <label for="nom"><i class="fa-solid fa-user"></i> Nom *</label>
+                <input type="text" id="nom" name="nom" placeholder="Ouédraogo" autocomplete="family-name" />
+                <p class="form-error" id="nom-error"><i class="fa-solid fa-triangle-exclamation"></i> Le nom est requis.</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="telephone"><i class="fa-solid fa-phone"></i> Numéro de Téléphone *</label>
+              <input type="tel" id="telephone" name="telephone" placeholder="+226 70 00 00 00" autocomplete="tel" />
+              <p class="form-error" id="telephone-error"><i class="fa-solid fa-triangle-exclamation"></i> Veuillez entrer un numéro valide (min 8 chiffres).</p>
+            </div>
+            <div class="form-group">
+              <label for="categorie"><i class="fa-solid fa-tag"></i> Catégorie du Témoignage</label>
+              <select id="categorie" name="categorie">
+                <option value="">Choisir une catégorie…</option>
+                <option value="guerison">Guérison Divine</option>
+                <option value="delivrance">Délivrance</option>
+                <option value="finances">Bénédiction Financière</option>
+                <option value="famille">Restauration Familiale</option>
+                <option value="autre">Autre Miracle</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message"><i class="fa-solid fa-comment-dots"></i> Votre Témoignage *</label>
+              <textarea id="message" name="message" placeholder="Racontez ce que Dieu a fait pour vous…"></textarea>
+              <p class="form-error" id="message-error"><i class="fa-solid fa-triangle-exclamation"></i> Veuillez écrire votre témoignage (min 20 caractères).</p>
+            </div>
+            <div id="formSuccess" class="form-success" aria-live="polite">
+              <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+              <h3>Gloire à Dieu !</h3>
+              <p>Votre témoignage a été reçu. Que Dieu continue à vous bénir abondamment.</p>
+            </div>
+            <button type="submit" class="btn-submit" id="submitBtn">
+              <i class="fa-solid fa-paper-plane"></i> Soumettre mon Témoignage
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       LOCALISATION – GOOGLE MAPS
+  ============================================================ -->
+  <section id="localisation" aria-labelledby="localisation-title">
+    <div class="container">
+      <span class="section-tag">Nous Trouver</span>
+      <h2 class="section-title" id="localisation-title">Notre Localisation</h2>
+      <p class="section-subtitle">Venez nous rendre visite. Nous sommes au cœur d'Ouagadougou, prêts à vous accueillir avec joie et amour.</p>
+
+      <div class="localisation-layout">
+
+        <!-- Informations pratiques -->
+        <div class="localisation-info fade-in">
+          <div class="info-cards">
+
+            <div class="info-card">
+              <div class="info-card-icon"><i class="fa-solid fa-location-dot"></i></div>
+              <div class="info-card-body">
+                <div class="info-card-label">Adresse</div>
+                <div class="info-card-value">Secteur 15, Quartier Gounghin</div>
+                <div class="info-card-sub">Ouagadougou, Burkina Faso</div>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-icon"><i class="fa-regular fa-clock"></i></div>
+              <div class="info-card-body">
+                <div class="info-card-label">Horaires d'accueil</div>
+                <div class="info-card-value">Lun – Sam : 08h00 – 18h00</div>
+                <div class="info-card-sub">Dimanche : Culte de 09h00 à 12h30</div>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-icon"><i class="fa-solid fa-phone-volume"></i></div>
+              <div class="info-card-body">
+                <div class="info-card-label">Téléphone</div>
+                <div class="info-card-value">+226 70 00 00 00</div>
+                <div class="info-card-sub">+226 25 00 00 00 (Secrétariat)</div>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-icon"><i class="fa-solid fa-envelope"></i></div>
+              <div class="info-card-body">
+                <div class="info-card-label">Email</div>
+                <div class="info-card-value">contact@cimpp.org</div>
+                <div class="info-card-sub">Réponse sous 24h ouvrables</div>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-icon"><i class="fa-solid fa-car"></i></div>
+              <div class="info-card-body">
+                <div class="info-card-label">Accès &amp; Parking</div>
+                <div class="info-card-value">Parking gratuit sur site</div>
+                <div class="info-card-sub">Accessible en taxi, moto-taxi et bus urbain</div>
+              </div>
+            </div>
+
+          </div>
+
+          <a
+            href="https://www.google.com/maps/dir/?api=1&destination=12.3647,-1.5332"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-directions"
+          >
+            <i class="fa-solid fa-route"></i> Obtenir l'itinéraire
+          </a>
+        </div>
+
+        <!-- Carte Google Maps embed -->
+        <div class="map-wrapper fade-in fade-in-delay-1">
+          <div class="map-label" aria-hidden="true">
+            <i class="fa-solid fa-church"></i> C.I.M.P.P – Ouagadougou
+          </div>
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d247372.99741884834!2d-1.7646596!3d12.3646612!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xe2eae4f37b2c67d%3A0x3fbb1d12f01b0ed0!2sOuagadougou%2C%20Burkina%20Faso!5e0!3m2!1sfr!2sbf!4v1700000000000!5m2!1sfr!2sbf"
+            title="Localisation C.I.M.P.P sur Google Maps"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            aria-label="Carte Google Maps — localisation de l'église CIMPP à Ouagadougou"
+          ></iframe>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const URL_T = '{% url 'main:submit_temoignage' %}'
+
+  function ouvrirModal(card) {
+    const modal = document.getElementById('evenement-modal');
+
+    document.getElementById('modal-nom').textContent         = card.dataset.nom;
+    document.getElementById('modal-date').textContent        = card.dataset.date;
+    document.getElementById('modal-lieu').textContent        = card.dataset.lieu;
+    document.getElementById('modal-description').textContent = card.dataset.description;
+
+    const img = document.getElementById('modal-image');
+    img.src = card.dataset.image || '';
+    img.alt = card.dataset.nom;
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function fermerModal() {
+    document.getElementById('evenement-modal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Ferme en cliquant sur le fond sombre
+  function fermerModalOverlay(event) {
+    if (event.target.id === 'evenement-modal') {
+      fermerModal();
+    }
+  }
+
+  // Ferme avec la touche Échap
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') fermerModal();
+  });
+</script>
+
+
+{% endblock %}

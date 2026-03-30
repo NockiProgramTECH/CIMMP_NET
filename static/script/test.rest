@@ -1,0 +1,18 @@
+
+
+
+
+
+
+POST http://127.0.0.1:8000/submit-temoignage/ HTTP/1.1
+Host:
+Content-Type: application/json
+
+{
+    "nom": "John",
+    "prenom": "Doe",
+    "email": "joh.doe@example.com",
+    "telephone": "1234567890",
+    "categorie": "Testimony",
+    "message": "This is a test message."
+}

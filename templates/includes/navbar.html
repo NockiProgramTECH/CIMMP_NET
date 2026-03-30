@@ -1,0 +1,48 @@
+{% load static %}
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+
+
+<nav id="navbar" role="navigation" aria-label="Navigation principale">
+    <div class="container nav-inner">
+
+      <a href="#hero" class="nav-brand">
+        <div class="nav-logo-circle"><img src="{% static 'image/cimpp.jpg' %}" alt="logo C.I.M.P.P"></div>
+        <div class="nav-name">
+          C.I.M.P.P
+          <span>Centre International de Mission</span>
+        </div>
+      </a>
+
+      <ul class="nav-links" role="list">
+        <li><a href="#apropos">À Propos</a></li>
+        <li><a href="">Prédications</a></li>
+        <li><a href="#programme">Programme</a></li>
+        <li><a href="#evenements">Événements</a></li>
+        <li><a href="#galerie">Galerie</a></li>
+        <li><a href="#localisation">Localisation</a></li>
+        <li><a href="#temoignages">Témoignages</a></li>
+      </ul>
+{% comment %} 
+      <a href="#temoignages" class="btn btn-primary nav-cta">
+     Nous rejoindre
+      </a> {% endcomment %}
+      <button class="hamburger" id="hamburgerBtn" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Menu mobile">
+    <button class="mobile-close" id="mobileClose" aria-label="Fermer le menu"><i class="fa-solid fa-xmark"></i></button>
+    <a href="#apropos"><i class="fa-solid fa-church"></i> À Propos</a>
+    <a href="#predications"><i class="fa-solid fa-microphone"></i> Prédications</a>
+    <a href="#programme"><i class="fa-solid fa-calendar-days"></i> Programme</a>
+    <a href="#evenements"><i class="fa-solid fa-star"></i> Événements</a>
+    <a href="#galerie"><i class="fa-solid fa-images"></i> Galerie</a>
+    <a href="#verset"><i class="fa-solid fa-book-bible"></i> Verset du Jour</a>
+    <a href="#localisation"><i class="fa-solid fa-location-dot"></i> Localisation</a>
+    <a href="#temoignages"><i class="fa-solid fa-comment-dots"></i> Témoignages</a>
+  </div>

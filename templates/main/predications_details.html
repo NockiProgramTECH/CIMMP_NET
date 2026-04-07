@@ -1,0 +1,124 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+  {% block titre %} Prédications – C.I.M.P.P{% endblock titre %}
+
+{% block content %}
+
+ <header class="page-hero" role="banner">
+    <div class="container page-hero-inner">
+      <nav class="breadcrumb" aria-label="Fil d'ariane">
+        <a href="/"><i class="fa-solid fa-house"></i> Accueil</a>
+        <i class="fa-solid fa-chevron-right"></i>
+         <a href="/predications#predications-list"><i class="fa-solid "></i> Prédications</a>
+         <span>{{pre_detail.titre}}</span>
+      </nav>
+      <h1>Nos <span>Prédications</span><br/>& Séquences Bibliques</h1>
+      <p>Découvrez des messages prophétiques, des études approfondies et des enseignements qui transforment les âmes et fortifient la foi.</p>
+      {% comment %} <div class="hero-meta">
+        <div class="hero-meta-item"><i class="fa-solid fa-microphone"></i> 48 Prédications disponibles</div>
+        <div class="hero-meta-item"><i class="fa-solid fa-book-bible"></i> 6 Séries bibliques</div>
+        <div class="hero-meta-item"><i class="fa-solid fa-users"></i> 3 Prédicateurs</div>
+        <div class="hero-meta-item"><i class="fa-brands fa-youtube"></i> Disponible en replay</div>
+      </div> {% endcomment %}
+    </div>
+  </header>
+  <!-- ============================================================
+       MODAL DÉTAIL PRÉDICATION
+  ============================================================ -->
+  <section class="center"><div class=""  aria-label="Détail de la prédication">
+    <div class="modal-box" id="modalBox">
+
+      <!-- Hero modal -->
+        <div class="modal-hero">
+          <img src="{{pre_detail.img_couverture.url}}" alt="{{pre_detail.titre}}" style="width: 100%; height: auto; object-fit: cover;" />
+           <div class="modal-hero-overlay">
+            <div class="modal-category" id="modalCat"></div>
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <div class="modal-meta-row" id="modalMeta"></div>
+          </div>
+        </div>
+
+      <!-- Corps modal : contenu + sidebar -->
+      <div class="modal-body">
+
+        <!-- Colonne principale -->
+        <div class="modal-content">
+
+          <!-- Résumé -->
+          <div class="content-block" id="modalSummary">
+            <h3 class="content-block-title"><i class="fa-solid fa-align-left"></i> Résumé du Message</h3>
+           {{pre_detail.resume|linebreaks}} 
+          </div>
+
+          <!-- Points clés -->
+          <div class="content-block" id="modalPoints">
+            <h3 class="content-block-title"><i class="fa-solid fa-list-check"></i> Points Clés du Message</h3>
+            <div class="key-points" id="keyPointsList"></div>
+          </div>
+
+          <!-- Application pratique -->
+          <div class="content-block" id="modalApp">
+            <h3 class="content-block-title"><i class="fa-solid fa-seedling"></i> Application Pratique</h3>
+            <div class="application-grid" id="appList"></div>
+          </div>
+
+        </div>
+
+        <!-- Sidebar -->
+        <div class="modal-sidebar">
+
+          <!-- Carte verset principal -->
+          <div class="verse-card">
+            <div class="verse-card-label"><i class="fa-solid fa-book-bible"></i> Verset Clé</div>
+            <div class="verse-card-ref" id="modalVerseRef">
+              {{pre_detail.verset_principal}}
+                   </div>
+            <p class="verse-card-text" id="modalVerseText"></p>
+            <div class="verse-card-divider"></div>
+            <p class="verse-card-context" id="modalVerseContext"></p>
+          </div>
+
+          <!-- Versets secondaires -->
+          <h4 style="font-family:var(--font-title);font-size:0.9rem;color:var(--primary-blue);margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+            <i class="fa-solid fa-bookmark" style="color:var(--accent-yellow);"></i> Références Bibliques
+          </h4>
+          <div class="verses-list" id="versesList">
+
+            <div class="verse-mini">
+           <div class="verse-mini-ref"><i class="fa-solid fa-bookmark"></i>verset reference</div>
+           <p class="verse-mini-text">lorem</p>
+
+           {% comment %}  {% endcomment %}
+
+         </div>
+
+          <div class="verses-list" id="versesList">
+
+            <div class="verse-mini">
+           <div class="verse-mini-ref"><i class="fa-solid fa-bookmark"></i>verset reference</div>
+           <p class="verse-mini-text">lorem</p>
+
+           {% comment %}  {% endcomment %}
+          
+           <!-- Boutons -->
+         
+
+
+
+         </div>
+          <a class="btn-listen" href ="/"><i class="fa-solid fa-play"></i>Regarder la video</a>
+          <button class="btn-partager"><i class="fa-solid fa-share-nodes"></i> Partager cette Prédication</button>
+        
+
+    
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  {% endblock content %}
+

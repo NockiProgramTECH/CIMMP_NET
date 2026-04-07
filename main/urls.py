@@ -8,7 +8,8 @@ app_name ="main"
 urlpatterns = [
     path('',views.index,name="index"),
     path('submit-temoignage/', views.submit_temoignage, name='submit_temoignage'),
-    path('predications/<str:slug>/',views.predication_detail,name="predications"),
+    path('predications/', views.predications_list, name='predications_list'),
+    path('predications/<str:slug>/', views.predication_detail, name='predication_detail'),
 
 
 ]

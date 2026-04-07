@@ -1,0 +1,917 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+  <!-- ============================================================
+       PAGE HERO
+  ============================================================ -->
+  <header class="page-hero" role="banner">
+    <div class="container page-hero-inner">
+      <nav class="breadcrumb" aria-label="Fil d'ariane">
+        <a href="cimpp.html"><i class="fa-solid fa-house"></i> Accueil</a>
+        <i class="fa-solid fa-chevron-right"></i>
+        <span>Prédications</span>
+      </nav>
+      <h1>Nos <span>Prédications</span><br/>& Séquences Bibliques</h1>
+      <p>Découvrez des messages prophétiques, des études approfondies et des enseignements qui transforment les âmes et fortifient la foi.</p>
+      <div class="hero-meta">
+        <div class="hero-meta-item"><i class="fa-solid fa-microphone"></i> 48 Prédications disponibles</div>
+        <div class="hero-meta-item"><i class="fa-solid fa-book-bible"></i> 6 Séries bibliques</div>
+        <div class="hero-meta-item"><i class="fa-solid fa-users"></i> 3 Prédicateurs</div>
+        <div class="hero-meta-item"><i class="fa-brands fa-youtube"></i> Disponible en replay</div>
+      </div>
+    </div>
+  </header>
+
+
+
+  <!-- ============================================================
+       GRILLE DES PREDICATIONS
+  ============================================================ -->
+  <section id="predications-list" aria-labelledby="pred-list-title">
+    <div class="container">
+      <span class="section-tag">Bibliothèque</span>
+      <h2 class="section-title" id="pred-list-title">Toutes les Prédications</h2>
+      <p class="section-subtitle">Cliquez sur une carte pour lire le résumé complet, les versets clés et les points d'application.</p>
+
+      <div class="pred-grid">
+
+        <!-- ── CARTE 1 ── -->
+        <article class="pred-card fade-in" data-id="1" role="button" tabindex="0" aria-label="Ouvrir la prédication : L'Abondance de Dieu">
+          <div class="pred-card-img">
+            <img src="https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=600&q=80" alt="L'Abondance de Dieu" loading="lazy" />
+            <div class="pred-card-badge"><i class="fa-solid fa-book-open"></i> Jean</div>
+            <div class="pred-card-date">15 Jan 2025</div>
+            <div class="pred-card-duration"><i class="fa-regular fa-clock"></i> 58 min</div>
+          </div>
+          <div class="pred-card-body">
+            <div class="pred-card-cat"><i class="fa-solid fa-dove"></i> Grâce &amp; Abondance</div>
+            <h3 class="pred-card-title">L'Abondance que Jésus est venu apporter</h3>
+            <p class="pred-card-excerpt">Découvrez comment Jésus, le Bon Berger, détruit l'œuvre du voleur et nous restitue une vie pleine et entière selon Jean 10:10.</p>
+            <div class="pred-card-meta">
+              <div class="pred-card-preacher">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&q=80" alt="Pasteur Emmanuel K." />
+                <span>Past. Emmanuel K.</span>
+              </div>
+              <div class="pred-card-stars">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+            </div>
+            <div class="pred-card-link">Lire le détail <i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+        </article>
+
+        <!-- ── CARTE 2 ── -->
+        <article class="pred-card fade-in fade-in-delay-1" data-id="2" role="button" tabindex="0" aria-label="Ouvrir la prédication : La Victoire par la Prière">
+          <div class="pred-card-img">
+            <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=600&q=80" alt="La Prière" loading="lazy" />
+            <div class="pred-card-badge"><i class="fa-solid fa-hands-praying"></i> Prière</div>
+            <div class="pred-card-date">22 Jan 2025</div>
+            <div class="pred-card-duration"><i class="fa-regular fa-clock"></i> 72 min</div>
+          </div>
+          <div class="pred-card-body">
+            <div class="pred-card-cat"><i class="fa-solid fa-hands-praying"></i> Prière &amp; Intercession</div>
+            <h3 class="pred-card-title">La Victoire Spirituelle par la Prière</h3>
+            <p class="pred-card-excerpt">La prière n'est pas une option mais une arme divine. Ce message révèle les stratégies de prière pour vaincre tout obstacle sur votre chemin.</p>
+            <div class="pred-card-meta">
+              <div class="pred-card-preacher">
+                <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=60&q=80" alt="Prophète Samuel D." />
+                <span>Proph. Samuel D.</span>
+              </div>
+              <div class="pred-card-stars">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+            </div>
+            <div class="pred-card-link">Lire le détail <i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+        </article>
+
+        <!-- ── CARTE 3 ── -->
+        <article class="pred-card fade-in fade-in-delay-2" data-id="3" role="button" tabindex="0" aria-label="Ouvrir la prédication : Marcher par la Foi">
+          <div class="pred-card-img">
+            <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&q=80" alt="Foi" loading="lazy" />
+            <div class="pred-card-badge"><i class="fa-solid fa-shield-halved"></i> Foi</div>
+            <div class="pred-card-date">29 Jan 2025</div>
+            <div class="pred-card-duration"><i class="fa-regular fa-clock"></i> 64 min</div>
+          </div>
+          <div class="pred-card-body">
+            <div class="pred-card-cat"><i class="fa-solid fa-shield-halved"></i> Foi &amp; Délivrance</div>
+            <h3 class="pred-card-title">Marcher par la Foi et non par la Vue</h3>
+            <p class="pred-card-excerpt">La foi véritable transcende les circonstances. Apprenez à marcher dans l'invisible en vous appuyant uniquement sur la Parole immuable de Dieu.</p>
+            <div class="pred-card-meta">
+              <div class="pred-card-preacher">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=60&q=80" alt="Past. Marie-Claire O." />
+                <span>Past. Marie-Claire O.</span>
+              </div>
+              <div class="pred-card-stars">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
+              </div>
+            </div>
+            <div class="pred-card-link">Lire le détail <i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+        </article>
+
+        <!-- ── CARTE 4 ── -->
+        <article class="pred-card fade-in" data-id="4" role="button" tabindex="0" aria-label="Ouvrir la prédication : La Puissance du Sang de Jésus">
+          <div class="pred-card-img">
+            <img src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=600&q=80" alt="Sang de Jésus" loading="lazy" />
+            <div class="pred-card-badge"><i class="fa-solid fa-cross"></i> Salut</div>
+            <div class="pred-card-date">05 Fév 2025</div>
+            <div class="pred-card-duration"><i class="fa-regular fa-clock"></i> 55 min</div>
+          </div>
+          <div class="pred-card-body">
+            <div class="pred-card-cat"><i class="fa-solid fa-dove"></i> Grâce &amp; Salut</div>
+            <h3 class="pred-card-title">La Puissance du Sang de Jésus-Christ</h3>
+            <p class="pred-card-excerpt">Le sang de Jésus parle encore aujourd'hui. Ce message révèle la puissance redemptrice, purificatrice et libératrice du sacrifice de Christ à la croix.</p>
+            <div class="pred-card-meta">
+              <div class="pred-card-preacher">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&q=80" alt="Pasteur Emmanuel K." />
+                <span>Past. Emmanuel K.</span>
+              </div>
+              <div class="pred-card-stars">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+            </div>
+            <div class="pred-card-link">Lire le détail <i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+        </article>
+
+        <!-- ── CARTE 5 ── -->
+        <article class="pred-card fade-in fade-in-delay-1" data-id="5" role="button" tabindex="0" aria-label="Ouvrir la prédication : La Voix du Prophète">
+          <div class="pred-card-img">
+            <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80" alt="Prophétie" loading="lazy" />
+            <div class="pred-card-badge"><i class="fa-solid fa-bolt"></i> Prophétie</div>
+            <div class="pred-card-date">12 Fév 2025</div>
+            <div class="pred-card-duration"><i class="fa-regular fa-clock"></i> 81 min</div>
+          </div>
+          <div class="pred-card-body">
+            <div class="pred-card-cat"><i class="fa-solid fa-bolt"></i> Don Prophétique</div>
+            <h3 class="pred-card-title">La Voix du Prophète dans les Derniers Temps</h3>
+            <p class="pred-card-excerpt">Dans les temps de crise, Dieu n'est pas silencieux. Il élève des voix prophétiques pour révéler Sa volonté et guider Son peuple avec précision.</p>
+            <div class="pred-card-meta">
+              <div class="pred-card-preacher">
+                <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=60&q=80" alt="Prophète Samuel D." />
+                <span>Proph. Samuel D.</span>
+              </div>
+              <div class="pred-card-stars">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+            </div>
+            <div class="pred-card-link">Lire le détail <i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+        </article>
+
+        <!-- ── CARTE 6 ── -->
+        <article class="pred-card fade-in fade-in-delay-2" data-id="6" role="button" tabindex="0" aria-label="Ouvrir la prédication : La Famille selon Dieu">
+          <div class="pred-card-img">
+            <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600&q=80" alt="Famille" loading="lazy" />
+            <div class="pred-card-badge"><i class="fa-solid fa-house-heart"></i> Famille</div>
+            <div class="pred-card-date">19 Fév 2025</div>
+            <div class="pred-card-duration"><i class="fa-regular fa-clock"></i> 60 min</div>
+          </div>
+          <div class="pred-card-body">
+            <div class="pred-card-cat"><i class="fa-solid fa-house-heart"></i> Famille &amp; Mariage</div>
+            <h3 class="pred-card-title">La Famille selon le Cœur de Dieu</h3>
+            <p class="pred-card-excerpt">Dieu a établi la famille comme cellule de base de la société et de l'Église. Redécouvrez les fondements bibliques d'une famille unie, forte et bénie.</p>
+            <div class="pred-card-meta">
+              <div class="pred-card-preacher">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=60&q=80" alt="Past. Marie-Claire O." />
+                <span>Past. Marie-Claire O.</span>
+              </div>
+              <div class="pred-card-stars">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
+              </div>
+            </div>
+            <div class="pred-card-link">Lire le détail <i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       THÈMES BIBLIQUES
+  ============================================================ -->
+  <section id="themes" aria-labelledby="themes-title">
+    <div class="container">
+      <span class="section-tag">Explorer par Thème</span>
+      <h2 class="section-title" id="themes-title">Thèmes Bibliques</h2>
+      <p class="section-subtitle">Naviguez par catégorie pour trouver le message qui répond à votre situation.</p>
+
+      <div class="themes-grid">
+        <div class="theme-card fade-in">
+          <div class="theme-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="theme-name">Foi &amp; Délivrance</div>
+          <div class="theme-count"><i class="fa-solid fa-microphone"></i> 12 prédications</div>
+        </div>
+        <div class="theme-card fade-in fade-in-delay-1">
+          <div class="theme-icon"><i class="fa-solid fa-bolt"></i></div>
+          <div class="theme-name">Don Prophétique</div>
+          <div class="theme-count"><i class="fa-solid fa-microphone"></i> 10 prédications</div>
+        </div>
+        <div class="theme-card fade-in fade-in-delay-2">
+          <div class="theme-icon"><i class="fa-solid fa-hands-praying"></i></div>
+          <div class="theme-name">Prière &amp; Jeûne</div>
+          <div class="theme-count"><i class="fa-solid fa-microphone"></i> 8 prédications</div>
+        </div>
+        <div class="theme-card fade-in fade-in-delay-3">
+          <div class="theme-icon"><i class="fa-solid fa-dove"></i></div>
+          <div class="theme-name">Grâce &amp; Salut</div>
+          <div class="theme-count"><i class="fa-solid fa-microphone"></i> 9 prédications</div>
+        </div>
+        <div class="theme-card fade-in">
+          <div class="theme-icon"><i class="fa-solid fa-house-heart"></i></div>
+          <div class="theme-name">Famille &amp; Mariage</div>
+          <div class="theme-count"><i class="fa-solid fa-microphone"></i> 6 prédications</div>
+        </div>
+        <div class="theme-card fade-in fade-in-delay-1">
+          <div class="theme-icon"><i class="fa-solid fa-earth-africa"></i></div>
+          <div class="theme-name">Mission &amp; Évangile</div>
+          <div class="theme-count"><i class="fa-solid fa-microphone"></i> 3 prédications</div>
+        </div>
+        <div class="theme-card fade-in fade-in-delay-2">
+          <div class="theme-icon"><i class="fa-solid fa-hand-holding-heart"></i></div>
+          <div class="theme-name">Guérison Divine</div>
+          <div class="theme-count"><i class="fa-solid fa-microphone"></i> 7 prédications</div>
+        </div>
+        <div class="theme-card fade-in fade-in-delay-3">
+          <div class="theme-icon"><i class="fa-solid fa-crown"></i></div>
+          <div class="theme-name">Identité en Christ</div>
+          <div class="theme-count"><i class="fa-solid fa-microphone"></i> 5 prédications</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SÉRIES BIBLIQUES
+  ============================================================ -->
+  <section id="series" aria-labelledby="series-title">
+    <div class="container">
+      <span class="section-tag">Séquences Complètes</span>
+      <h2 class="section-title" id="series-title">Séries Bibliques</h2>
+      <p class="section-subtitle">Des enseignements organisés en séries pour un apprentissage approfondi et progressif de la Parole.</p>
+
+      <div class="series-list fade-in">
+
+        <div class="serie-item">
+          <div class="serie-num"><span>01</span><small>Série</small></div>
+          <div class="serie-info">
+            <div class="serie-cat"><i class="fa-solid fa-book-open"></i> Évangile de Jean</div>
+            <div class="serie-title">L'Évangile de Jean : Le Fils de Dieu révélé</div>
+            <div class="serie-meta">
+              <span><i class="fa-solid fa-microphone"></i> 8 messages</span>
+              <span><i class="fa-regular fa-calendar"></i> Janv. – Mars 2025</span>
+              <span><i class="fa-solid fa-user-tie"></i> Past. Emmanuel K.</span>
+            </div>
+          </div>
+          <div class="serie-verse">
+            <div class="ref"><i class="fa-solid fa-book-bible"></i> Jean 1:1</div>
+            <div class="text">« Au commencement était la Parole... »</div>
+          </div>
+        </div>
+
+        <div class="serie-item">
+          <div class="serie-num"><span>02</span><small>Série</small></div>
+          <div class="serie-info">
+            <div class="serie-cat"><i class="fa-solid fa-bolt"></i> Prophétie</div>
+            <div class="serie-title">Les Prophètes de Dieu : Mission &amp; Mandat</div>
+            <div class="serie-meta">
+              <span><i class="fa-solid fa-microphone"></i> 6 messages</span>
+              <span><i class="fa-regular fa-calendar"></i> Fév. – Avr. 2025</span>
+              <span><i class="fa-solid fa-user-tie"></i> Proph. Samuel D.</span>
+            </div>
+          </div>
+          <div class="serie-verse">
+            <div class="ref"><i class="fa-solid fa-book-bible"></i> Amos 3:7</div>
+            <div class="text">« L'Éternel ne fait rien sans révéler son secret... »</div>
+          </div>
+        </div>
+
+        <div class="serie-item">
+          <div class="serie-num"><span>03</span><small>Série</small></div>
+          <div class="serie-info">
+            <div class="serie-cat"><i class="fa-solid fa-hands-praying"></i> Prière</div>
+            <div class="serie-title">L'École de la Prière : Prier avec Puissance</div>
+            <div class="serie-meta">
+              <span><i class="fa-solid fa-microphone"></i> 5 messages</span>
+              <span><i class="fa-regular fa-calendar"></i> Mars 2025</span>
+              <span><i class="fa-solid fa-user-tie"></i> Équipe Pastorale</span>
+            </div>
+          </div>
+          <div class="serie-verse">
+            <div class="ref"><i class="fa-solid fa-book-bible"></i> Matthieu 6:9</div>
+            <div class="text">« Voici donc comment vous devez prier... »</div>
+          </div>
+        </div>
+
+        <div class="serie-item">
+          <div class="serie-num"><span>04</span><small>Série</small></div>
+          <div class="serie-info">
+            <div class="serie-cat"><i class="fa-solid fa-house-heart"></i> Famille</div>
+            <div class="serie-title">La Famille : Bâtir sur le Roc</div>
+            <div class="serie-meta">
+              <span><i class="fa-solid fa-microphone"></i> 4 messages</span>
+              <span><i class="fa-regular fa-calendar"></i> Avr. 2025</span>
+              <span><i class="fa-solid fa-user-tie"></i> Past. Marie-Claire O.</span>
+            </div>
+          </div>
+          <div class="serie-verse">
+            <div class="ref"><i class="fa-solid fa-book-bible"></i> Éphésiens 5:25</div>
+            <div class="text">« Maris, aimez vos femmes, comme Christ a aimé l'Église... »</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       MODAL DÉTAIL PRÉDICATION
+  ============================================================ -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-label="Détail de la prédication">
+    <div class="modal-box" id="modalBox">
+
+      <!-- Hero modal -->
+      <div class="modal-hero">
+        <img id="modalImg" src="" alt="" />
+        <button class="modal-close" id="modalClose" aria-label="Fermer"><i class="fa-solid fa-xmark"></i></button>
+        <div class="modal-hero-overlay">
+          <div class="modal-category" id="modalCat"></div>
+          <h2 class="modal-title" id="modalTitle"></h2>
+          <div class="modal-meta-row" id="modalMeta"></div>
+        </div>
+      </div>
+
+      <!-- Corps modal : contenu + sidebar -->
+      <div class="modal-body">
+
+        <!-- Colonne principale -->
+        <div class="modal-content">
+
+          <!-- Résumé -->
+          <div class="content-block" id="modalSummary">
+            <h3 class="content-block-title"><i class="fa-solid fa-align-left"></i> Résumé du Message</h3>
+          </div>
+
+          <!-- Points clés -->
+          <div class="content-block" id="modalPoints">
+            <h3 class="content-block-title"><i class="fa-solid fa-list-check"></i> Points Clés du Message</h3>
+            <div class="key-points" id="keyPointsList"></div>
+          </div>
+
+          <!-- Application pratique -->
+          <div class="content-block" id="modalApp">
+            <h3 class="content-block-title"><i class="fa-solid fa-seedling"></i> Application Pratique</h3>
+            <div class="application-grid" id="appList"></div>
+          </div>
+
+        </div>
+
+        <!-- Sidebar -->
+        <div class="modal-sidebar">
+
+          <!-- Carte verset principal -->
+          <div class="verse-card">
+            <div class="verse-card-label"><i class="fa-solid fa-book-bible"></i> Verset Clé</div>
+            <div class="verse-card-ref" id="modalVerseRef"></div>
+            <p class="verse-card-text" id="modalVerseText"></p>
+            <div class="verse-card-divider"></div>
+            <p class="verse-card-context" id="modalVerseContext"></p>
+          </div>
+
+          <!-- Versets secondaires -->
+          <h4 style="font-family:var(--font-title);font-size:0.9rem;color:var(--primary-blue);margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+            <i class="fa-solid fa-bookmark" style="color:var(--accent-yellow);"></i> Références Bibliques
+          </h4>
+          <div class="verses-list" id="versesList"></div>
+
+          <!-- Infos rapides -->
+          <div class="quick-info">
+            <div class="quick-info-title"><i class="fa-solid fa-circle-info"></i> Informations</div>
+            <div id="quickInfoList"></div>
+          </div>
+
+          <!-- Évaluation -->
+          <div class="rating-card">
+            <div class="rating-card-title"><i class="fa-solid fa-star" style="color:var(--accent-yellow);margin-right:4px;"></i> Évaluation</div>
+            <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:6px;">
+              <span class="rating-num" id="modalRatingNum">5.0</span>
+              <div class="rating-stars" id="modalRatingStars"></div>
+            </div>
+            <p class="rating-text" id="modalRatingText"></p>
+          </div>
+
+          <!-- Boutons -->
+          <button class="btn-listen"><i class="fa-solid fa-play"></i> Écouter le Message</button>
+          <button class="btn-partager"><i class="fa-solid fa-share-nodes"></i> Partager cette Prédication</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo-wrap">
+            <div class="footer-logo-circle">C.I.M.P.P</div>
+            <div class="footer-name">C.I.M.P.P<span>Centre de Mission Prophétique</span></div>
+          </div>
+          <p class="footer-desc">Des messages qui transforment les vies et glorifient Dieu. Retrouvez toutes nos prédications en replay sur notre chaîne YouTube.</p>
+          <div class="social-links">
+            <a href="#" class="social-link" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" class="social-link" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            <a href="#" class="social-link" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="#" class="social-link" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="social-link" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
+          </div>
+        </div>
+        <div>
+          <h4 class="footer-col-title">Navigation</h4>
+          <ul class="footer-links" role="list">
+            <li><a href="cimpp.html"><i class="fa-solid fa-angle-right"></i> Accueil</a></li>
+            <li><a href="cimpp.html#apropos"><i class="fa-solid fa-angle-right"></i> À Propos</a></li>
+            <li><a href="predications.html"><i class="fa-solid fa-angle-right"></i> Prédications</a></li>
+            <li><a href="cimpp.html#programme"><i class="fa-solid fa-angle-right"></i> Programme</a></li>
+            <li><a href="cimpp.html#evenements"><i class="fa-solid fa-angle-right"></i> Événements</a></li>
+            <li><a href="cimpp.html#localisation"><i class="fa-solid fa-angle-right"></i> Localisation</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-col-title">Séries</h4>
+          <ul class="footer-links" role="list">
+            <li><a href="#series"><i class="fa-solid fa-angle-right"></i> Évangile de Jean</a></li>
+            <li><a href="#series"><i class="fa-solid fa-angle-right"></i> Don Prophétique</a></li>
+            <li><a href="#series"><i class="fa-solid fa-angle-right"></i> École de la Prière</a></li>
+            <li><a href="#series"><i class="fa-solid fa-angle-right"></i> La Famille</a></li>
+            <li><a href="#themes"><i class="fa-solid fa-angle-right"></i> Guérison Divine</a></li>
+            <li><a href="#themes"><i class="fa-solid fa-angle-right"></i> Identité en Christ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-col-title">Nous Contacter</h4>
+          <ul class="footer-contact" role="list">
+            <li><i class="fa-solid fa-location-dot"></i><span>Secteur 15, Quartier Gounghin, Ouagadougou, Burkina Faso</span></li>
+            <li><i class="fa-solid fa-phone"></i><span>+226 70 00 00 00</span></li>
+            <li><i class="fa-solid fa-envelope"></i><span>contact@cimpp.org</span></li>
+            <li><i class="fa-solid fa-clock"></i><span>Culte Dimanche : 09h00 – 12h30</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 <span>C.I.M.P.P</span> — Centre International de Mission Prophétique et de la Parole. Tous droits réservés.</p>
+        <p>Fait avec <span><i class="fa-solid fa-heart"></i></span> pour la Gloire de Dieu</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    'use strict';
+
+    /* ----------------------------------------------------------
+       DONNÉES DES PRÉDICATIONS
+    ---------------------------------------------------------- */
+    const predications = {
+      1: {
+        img:      'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=1000&q=80',
+        cat:      '<i class="fa-solid fa-book-open"></i> Évangile de Jean',
+        title:    "L'Abondance que Jésus est venu apporter",
+        meta: [
+          { icon: 'fa-user-tie',    text: 'Past. Emmanuel K.' },
+          { icon: 'fa-calendar',    text: '15 Janvier 2025'   },
+          { icon: 'fa-clock',       text: '58 minutes'        },
+          { icon: 'fa-book-bible',  text: 'Jean 10:10'        },
+        ],
+        summary: [
+          "Dans ce message puissant et libérateur, le Pasteur Emmanuel K. ouvre Jean 10:10 pour révéler la double réalité à laquelle tout croyant fait face : le voleur — qui vient pour dérober, égorger et détruire — et Jésus, le Bon Berger, qui vient apporter la vie en abondance.",
+          "L'abondance dont parle Jésus n'est pas simplement matérielle. Elle est d'abord spirituelle : une relation profonde et intime avec Dieu, une paix qui surpasse tout entendement, une joie que le monde ne peut ni donner ni ôter. C'est ensuite une abondance relationnelle, de santé, de sagesse, et enfin de provision matérielle.",
+          "Ce message appelle chaque enfant de Dieu à refuser la médiocrité spirituelle, à reconnaître les stratagèmes du voleur, et à se positionner activement pour recevoir tout ce que Jésus a payé au prix de Son sang sur la croix."
+        ],
+        points: [
+          "Jésus se présente comme le Bon Berger qui connaît Ses brebis par leur nom et les appelle individuellement.",
+          "Le voleur opère à travers la maladie, la pauvreté, la peur, le doute et les mensonges du monde.",
+          "L'abondance biblique est globale : spirituelle, émotionnelle, relationnelle, physique et matérielle.",
+          "Pour vivre dans l'abondance, le croyant doit rester dans la bergerie — c'est-à-dire demeurer en Christ.",
+          "La foi active est la clé : réclamer les promesses de Dieu avec conviction et persévérance."
+        ],
+        app: [
+          { icon: 'fa-book-bible',    text: "Méditez Jean 10 chaque matin pendant 7 jours" },
+          { icon: 'fa-hands-praying', text: "Priez quotidiennement pour identifier les zones de vol dans votre vie" },
+          { icon: 'fa-pen',           text: "Listez 5 domaines où vous désirez l'abondance de Dieu" },
+          { icon: 'fa-users',         text: "Partagez ce message avec un frère ou une sœur en difficulté" },
+        ],
+        verseRef:  'Jean 10 : 10',
+        verseText: 'Le voleur ne vient que pour dérober, égorger et détruire ; moi, je suis venu afin que les brebis aient la vie, et qu\'elles l\'aient en abondance.',
+        verseCtx:  'Jésus parle de Lui-même comme du Bon Berger, en contraste avec le voleur. Ce verset est la fondation de toute la théologie de l\'abondance chrétienne.',
+        verses: [
+          { ref: 'Psaumes 23:1',         text: 'L\'Éternel est mon berger : je ne manquerai de rien.' },
+          { ref: '3 Jean 1:2',           text: 'Bien-aimé, je souhaite que tu prospères à tous égards...' },
+          { ref: 'Philippiens 4:19',     text: 'Mon Dieu pourvoira à tous vos besoins...' },
+          { ref: 'Deutéronome 28:2',     text: 'Toutes ces bénédictions viendront sur toi et t\'atteindront...' },
+        ],
+        quickInfo: [
+          { icon: 'fa-user-tie',      label: 'Prédicateur',  val: 'Pasteur Emmanuel K.' },
+          { icon: 'fa-calendar',      label: 'Date',         val: '15 Janvier 2025' },
+          { icon: 'fa-clock',         label: 'Durée',        val: '58 minutes' },
+          { icon: 'fa-tag',           label: 'Thème',        val: 'Grâce & Abondance' },
+          { icon: 'fa-book-bible',    label: 'Livre',        val: 'Évangile de Jean' },
+          { icon: 'fa-language',      label: 'Langue',       val: 'Français' },
+        ],
+        rating: 5.0,
+        ratingStars: 5,
+        ratingText: '98% de fidèles ont trouvé ce message transformateur.',
+      },
+      2: {
+        img:      'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1000&q=80',
+        cat:      '<i class="fa-solid fa-hands-praying"></i> Prière & Intercession',
+        title:    "La Victoire Spirituelle par la Prière",
+        meta: [
+          { icon: 'fa-user-tie',    text: 'Proph. Samuel D.' },
+          { icon: 'fa-calendar',    text: '22 Janvier 2025'  },
+          { icon: 'fa-clock',       text: '72 minutes'       },
+          { icon: 'fa-book-bible',  text: '1 Thess. 5:17'   },
+        ],
+        summary: [
+          "Le Prophète Samuel D. délivre un enseignement stratégique sur la prière comme arme de guerre spirituelle. Ce message révèle que la prière n'est pas une simple discipline religieuse, mais le mécanisme divin par lequel le croyant accède à la toute-puissance de Dieu.",
+          "À travers de nombreux exemples bibliques — Élie, Daniel, Paul et Silas — le message démontre que la prière change les atmosphères, détruit les forteresses et fait intervenir l'armée céleste en faveur du croyant.",
+          "Quatre types de prière sont enseignés dans ce message : la prière de supplication, d'intercession, d'action de grâces et de guerre spirituelle. Chacun a son contexte et sa puissance propre."
+        ],
+        points: [
+          "Prier sans cesse ne signifie pas une récitation mécanique, mais un état permanent de communion avec Dieu.",
+          "Élie a prié avec ferveur et les cieux se sont ouverts : la même puissance est accessible aujourd'hui.",
+          "La prière en langues édifie l'homme intérieur et pénètre dans les mystères de l'Esprit.",
+          "L'intercession est la forme la plus élevée de prière : se tenir dans la brèche pour les autres.",
+          "La prière de guerre brise les liens diaboliques et libère les captifs spirituels."
+        ],
+        app: [
+          { icon: 'fa-clock',         text: "Établissez un créneau fixe de 30 min de prière chaque jour" },
+          { icon: 'fa-book-bible',    text: "Priez les psaumes à voix haute pour renforcer votre autorité" },
+          { icon: 'fa-users',         text: "Rejoignez ou créez une cellule d'intercession dans votre quartier" },
+          { icon: 'fa-calendar-days', text: "Faites un jeûne d'une journée par semaine accompagné de prière" },
+        ],
+        verseRef:  '1 Thessaloniciens 5 : 17',
+        verseText: 'Priez sans cesse.',
+        verseCtx:  'Paul exhorte l\'église de Thessalonique à maintenir une vie de prière continue, comme posture de vie et non comme acte ponctuel.',
+        verses: [
+          { ref: 'Jacques 5:16',      text: 'La prière fervente du juste a une grande efficace.' },
+          { ref: 'Matthieu 6:6',      text: 'Entre dans ta chambre, ferme ta porte, et prie ton Père...' },
+          { ref: 'Éphésiens 6:18',    text: 'Priez en tout temps par l\'Esprit, avec toutes sortes de prières...' },
+          { ref: 'Daniel 6:10',       text: 'Daniel priait trois fois par jour et louait son Dieu.' },
+        ],
+        quickInfo: [
+          { icon: 'fa-user-tie',      label: 'Prédicateur',  val: 'Prophète Samuel D.' },
+          { icon: 'fa-calendar',      label: 'Date',         val: '22 Janvier 2025' },
+          { icon: 'fa-clock',         label: 'Durée',        val: '72 minutes' },
+          { icon: 'fa-tag',           label: 'Thème',        val: 'Prière & Intercession' },
+          { icon: 'fa-book-bible',    label: 'Livre',        val: '1 Thessaloniciens' },
+          { icon: 'fa-language',      label: 'Langue',       val: 'Français' },
+        ],
+        rating: 5.0,
+        ratingStars: 5,
+        ratingText: '100% de fidèles recommandent ce message de combat.',
+      },
+      3: {
+        img:      'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1000&q=80',
+        cat:      '<i class="fa-solid fa-shield-halved"></i> Foi & Délivrance',
+        title:    "Marcher par la Foi et non par la Vue",
+        meta: [
+          { icon: 'fa-user-tie',    text: 'Past. Marie-Claire O.' },
+          { icon: 'fa-calendar',    text: '29 Janvier 2025'       },
+          { icon: 'fa-clock',       text: '64 minutes'            },
+          { icon: 'fa-book-bible',  text: '2 Cor. 5:7'           },
+        ],
+        summary: [
+          "La Pasteure Marie-Claire O. enseigne sur l'une des disciplines les plus difficiles et les plus puissantes de la vie chrétienne : marcher par la foi, non par la vue. Dans un monde qui exige des preuves tangibles avant d'agir, ce message appelle le croyant à adopter un mode de vie surnaturel.",
+          "La foi biblique n'est pas de l'ignorance ni de la naïveté spirituelle. C'est la conviction absolue que Dieu est fidèle à Sa Parole, même lorsque les circonstances semblent contredire Ses promesses. Abraham en est l'exemple parfait : il espéra contre toute espérance.",
+          "Ce message pratique donne des clés concrètes pour développer et exercer sa foi au quotidien, en s'appuyant sur la Parole, la communion et la prière."
+        ],
+        points: [
+          "La foi est une substance, pas une émotion : elle est la certitude des choses qu'on ne voit pas (Hébreux 11:1).",
+          "Abraham a marché par la foi pendant 25 ans avant de voir la naissance d'Isaac.",
+          "La vue spirituelle (révélation) est supérieure à la vue physique dans le Royaume de Dieu.",
+          "Nourrir sa foi : lire la Parole, la confesser, la méditer et agir sur elle.",
+          "L'épreuve de la foi produit la patience et forme le caractère christique."
+        ],
+        app: [
+          { icon: 'fa-pen',           text: "Confessez 3 promesses bibliques à voix haute chaque matin" },
+          { icon: 'fa-book-bible',    text: "Lisez Hébreux 11 (le chapitre de la foi) chaque jour pendant 21 jours" },
+          { icon: 'fa-heart',         text: "Identifiez un défi actuel et appliquez-y la foi en action concrète" },
+          { icon: 'fa-rotate',        text: "Remplacez chaque pensée de doute par une promesse de Dieu" },
+        ],
+        verseRef:  '2 Corinthiens 5 : 7',
+        verseText: 'Car nous marchons par la foi et non par la vue.',
+        verseCtx:  'Paul rappelle aux Corinthiens que la vie chrétienne s\'articule autour de la foi, même dans les épreuves et les incertitudes de l\'existence.',
+        verses: [
+          { ref: 'Hébreux 11:1',      text: 'Or la foi est une ferme assurance des choses qu\'on espère...' },
+          { ref: 'Romains 10:17',     text: 'La foi vient de ce qu\'on entend, et ce qu\'on entend vient de la Parole...' },
+          { ref: 'Romains 4:18',      text: 'Espérant contre toute espérance, Abraham crut...' },
+          { ref: 'Marc 11:24',        text: 'Tout ce que vous demandez en priant, croyez que vous l\'avez reçu...' },
+        ],
+        quickInfo: [
+          { icon: 'fa-user-tie',      label: 'Prédicatrice', val: 'Pasteure Marie-Claire O.' },
+          { icon: 'fa-calendar',      label: 'Date',         val: '29 Janvier 2025' },
+          { icon: 'fa-clock',         label: 'Durée',        val: '64 minutes' },
+          { icon: 'fa-tag',           label: 'Thème',        val: 'Foi & Délivrance' },
+          { icon: 'fa-book-bible',    label: 'Livre',        val: '2 Corinthiens' },
+          { icon: 'fa-language',      label: 'Langue',       val: 'Français' },
+        ],
+        rating: 4.5,
+        ratingStars: 4,
+        ratingText: '94% de fidèles ont été édifiés par cet enseignement sur la foi.',
+      },
+      4: {
+        img:      'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=1000&q=80',
+        cat:      '<i class="fa-solid fa-cross"></i> Grâce & Salut',
+        title:    "La Puissance du Sang de Jésus-Christ",
+        meta: [
+          { icon: 'fa-user-tie',    text: 'Past. Emmanuel K.' },
+          { icon: 'fa-calendar',    text: '05 Février 2025'   },
+          { icon: 'fa-clock',       text: '55 minutes'        },
+          { icon: 'fa-book-bible',  text: '1 Jean 1:7'        },
+        ],
+        summary: [
+          "Ce message au cœur du christianisme révèle la portée illimitée du sang de Jésus-Christ. Le Pasteur Emmanuel K. enseigne que le sang versé sur le Calvaire n'est pas un événement historique passé, mais une réalité spirituelle vivante et agissante aujourd'hui.",
+          "Le sang de Jésus parle ! Il plaide en faveur du croyant devant le trône de Dieu, il purifie de tout péché, il brise les malédictions héréditaires, il protège, il guérit et il donne accès à la présence de Dieu.",
+          "Ce message appelle à une application quotidienne du sang de Jésus dans notre vie, notre famille et notre maison."
+        ],
+        points: [
+          "Le sang de Jésus purifie le croyant de tout péché passé, présent et futur.",
+          "Il protège : comme le sang sur les linteaux lors de la Pâque, il fait passer l'ange destructeur.",
+          "Il brise les liens : malédictions héréditaires, pactes anciens et oppressions générations.",
+          "Il guérit : par ses meurtrissures, nous sommes guéris (Ésaïe 53:5).",
+          "Il réconcilie : il est le pont entre l'humanité pécheresse et le Dieu Saint."
+        ],
+        app: [
+          { icon: 'fa-home',          text: "Couvrez votre maison du sang de Jésus chaque matin en prière" },
+          { icon: 'fa-book-bible',    text: "Étudiez Exode 12 pour comprendre la puissance symbolique du sang" },
+          { icon: 'fa-users',         text: "Intercédez pour votre famille avec la confiance du sang versé" },
+          { icon: 'fa-heart',         text: "Confessez vos péchés quotidiennement pour marcher dans la pureté" },
+        ],
+        verseRef:  '1 Jean 1 : 7',
+        verseText: 'Mais si nous marchons dans la lumière, comme il est lui-même dans la lumière, nous sommes mutuellement en communion, et le sang de Jésus son Fils nous purifie de tout péché.',
+        verseCtx:  'Jean rappelle que la purification par le sang de Jésus est une réalité dynamique et permanente pour celui qui marche dans la lumière de la vérité.',
+        verses: [
+          { ref: 'Ésaïe 53:5',        text: 'Par ses meurtrissures, nous sommes guéris.' },
+          { ref: 'Apocalypse 12:11',   text: 'Ils l\'ont vaincu à cause du sang de l\'Agneau...' },
+          { ref: 'Hébreux 9:22',       text: 'Sans effusion de sang, il n\'y a pas de pardon.' },
+          { ref: 'Exode 12:13',        text: 'Le sang servira de signe... et je passerai par-dessus vous.' },
+        ],
+        quickInfo: [
+          { icon: 'fa-user-tie',      label: 'Prédicateur',  val: 'Pasteur Emmanuel K.' },
+          { icon: 'fa-calendar',      label: 'Date',         val: '05 Février 2025' },
+          { icon: 'fa-clock',         label: 'Durée',        val: '55 minutes' },
+          { icon: 'fa-tag',           label: 'Thème',        val: 'Grâce & Salut' },
+          { icon: 'fa-book-bible',    label: 'Livre',        val: '1 Jean' },
+          { icon: 'fa-language',      label: 'Langue',       val: 'Français' },
+        ],
+        rating: 5.0,
+        ratingStars: 5,
+        ratingText: '100% de fidèles ont été touchés par ce message fondamental.',
+      },
+      5: {
+        img:      'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1000&q=80',
+        cat:      '<i class="fa-solid fa-bolt"></i> Don Prophétique',
+        title:    "La Voix du Prophète dans les Derniers Temps",
+        meta: [
+          { icon: 'fa-user-tie',    text: 'Proph. Samuel D.' },
+          { icon: 'fa-calendar',    text: '12 Février 2025'  },
+          { icon: 'fa-clock',       text: '81 minutes'       },
+          { icon: 'fa-book-bible',  text: 'Amos 3:7'         },
+        ],
+        summary: [
+          "Dans ce message prophétique, le Prophète Samuel D. révèle le rôle crucial que Dieu confie aux prophètes dans les temps de la fin. Loin des caricatures et des excès, ce message rétablit la vision biblique authentique du ministère prophétique.",
+          "Dieu n'agit jamais sans révéler Son secret à Ses serviteurs les prophètes (Amos 3:7). Dans un monde en crise — guerres, pandémies, instabilité — Dieu lève des voix pour orienter, avertir et consoler Son peuple.",
+          "Ce message enseigne également comment discerner les vraies prophéties des fausses, et comment réagir juste face à une parole prophétique reçue."
+        ],
+        points: [
+          "Le prophète est un porte-parole de Dieu, non un voyant mystique ou un devin.",
+          "Toute prophétie authentique s'aligne sur la Parole écrite de Dieu sans jamais la contredire.",
+          "Les derniers temps sont marqués par une effusion prophétique accrue (Joël 2:28).",
+          "Le test d'une vraie prophétie : l'accomplissement (Deutéronome 18:22) et la conformité à l'Écriture.",
+          "Réagir à une prophétie : la noter, la garder, la tester, la prier et l'agir."
+        ],
+        app: [
+          { icon: 'fa-book-bible',    text: "Lisez Amos, Ézéchiel et Joël pour comprendre le ministère prophétique" },
+          { icon: 'fa-pen',           text: "Tenez un journal de prière pour noter vos impressions spirituelles" },
+          { icon: 'fa-users',         text: "Soumettez vos impressions prophétiques à un ancien pour discernement" },
+          { icon: 'fa-shield-halved', text: "Priez pour le don de discernement des esprits (1 Corinthiens 12)" },
+        ],
+        verseRef:  'Amos 3 : 7',
+        verseText: 'Car le Seigneur, l\'Éternel, ne fait rien sans avoir révélé son secret à ses serviteurs les prophètes.',
+        verseCtx:  'Amos affirme le principe divin de révélation préalable à travers les prophètes. Dieu ne surprend jamais Son peuple sans l\'avoir averti à l\'avance.',
+        verses: [
+          { ref: 'Joël 2:28',         text: 'Vos fils et vos filles prophétiseront, vos vieillards auront des songes...' },
+          { ref: 'Deutéronome 18:22', text: 'Si ce que dit ce prophète n\'arrive pas, c\'est que l\'Éternel ne l\'a pas dit.' },
+          { ref: '1 Corinthiens 14:3',text: 'Celui qui prophétise parle aux hommes... pour les édifier, les exhorter...' },
+          { ref: 'Apocalypse 19:10',  text: 'L\'esprit de prophétie, c\'est le témoignage de Jésus.' },
+        ],
+        quickInfo: [
+          { icon: 'fa-user-tie',      label: 'Prédicateur',  val: 'Prophète Samuel D.' },
+          { icon: 'fa-calendar',      label: 'Date',         val: '12 Février 2025' },
+          { icon: 'fa-clock',         label: 'Durée',        val: '81 minutes' },
+          { icon: 'fa-tag',           label: 'Thème',        val: 'Don Prophétique' },
+          { icon: 'fa-book-bible',    label: 'Livre',        val: 'Amos' },
+          { icon: 'fa-language',      label: 'Langue',       val: 'Français' },
+        ],
+        rating: 5.0,
+        ratingStars: 5,
+        ratingText: '96% recommandent ce message sur le ministère prophétique.',
+      },
+      6: {
+        img:      'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1000&q=80',
+        cat:      '<i class="fa-solid fa-house-heart"></i> Famille & Mariage',
+        title:    "La Famille selon le Cœur de Dieu",
+        meta: [
+          { icon: 'fa-user-tie',    text: 'Past. Marie-Claire O.' },
+          { icon: 'fa-calendar',    text: '19 Février 2025'       },
+          { icon: 'fa-clock',       text: '60 minutes'            },
+          { icon: 'fa-book-bible',  text: 'Éphésiens 5:25'        },
+        ],
+        summary: [
+          "La Pasteure Marie-Claire O. délivre un enseignement essentiel sur la famille telle que Dieu l'a conçue dès la création. Dans un monde où les structures familiales s'effondrent, ce message retourne aux fondements bibliques pour bâtir des foyers solides, aimants et bénis.",
+          "Dieu a institué la famille avant l'Église et avant l'État. Le mariage est une alliance sacrée entre un homme et une femme, reflet de la relation de Christ avec Son Église. Cet enseignement explore les rôles complémentaires du mari et de la femme, l'éducation des enfants selon Proverbes 22:6, et la gestion godly du foyer.",
+          "Le message appelle à la réconciliation des familles brisées, à la restauration des alliances et à la construction d'un héritage béni pour les générations futures."
+        ],
+        points: [
+          "Dieu est l'auteur du mariage : toute union bâtie en dehors de Lui est fragile.",
+          "Le mari est appelé à aimer sa femme comme Christ a aimé l'Église : sacrificiellement.",
+          "La femme est le soutien (ezer kenegdo) de son mari — une force, non une faiblesse.",
+          "Les enfants sont un héritage de l'Éternel : leur éducation spirituelle est une priorité absolue.",
+          "Bâtir la famille sur la prière, la Parole et la communication : les trois piliers du foyer chrétien."
+        ],
+        app: [
+          { icon: 'fa-book-bible',    text: "Lisez Éphésiens 5:22-33 en couple et discutez-en ensemble" },
+          { icon: 'fa-hands-praying', text: "Instaurez un temps de prière familiale quotidien, même 5 minutes" },
+          { icon: 'fa-heart',         text: "Exprimez votre gratitude à chaque membre de votre famille cette semaine" },
+          { icon: 'fa-child',         text: "Lisez un verset biblique avec vos enfants chaque soir avant le coucher" },
+        ],
+        verseRef:  'Éphésiens 5 : 25',
+        verseText: 'Maris, aimez vos femmes, comme Christ a aimé l\'Église et s\'est livré lui-même pour elle.',
+        verseCtx:  'Paul pose le standard divin du mariage : un amour sacrificiel, agapé, qui donne sans compter — à l\'image du don ultime de Christ sur la croix.',
+        verses: [
+          { ref: 'Genèse 2:24',       text: 'L\'homme quittera son père et sa mère... ils deviendront une seule chair.' },
+          { ref: 'Proverbes 22:6',    text: 'Instruis l\'enfant selon la voie qu\'il doit suivre...' },
+          { ref: 'Josué 24:15',       text: 'Moi et ma maison, nous servirons l\'Éternel.' },
+          { ref: 'Psaumes 127:3',     text: 'Les fils sont un héritage de l\'Éternel, le fruit du sein est une récompense.' },
+        ],
+        quickInfo: [
+          { icon: 'fa-user-tie',      label: 'Prédicatrice', val: 'Pasteure Marie-Claire O.' },
+          { icon: 'fa-calendar',      label: 'Date',         val: '19 Février 2025' },
+          { icon: 'fa-clock',         label: 'Durée',        val: '60 minutes' },
+          { icon: 'fa-tag',           label: 'Thème',        val: 'Famille & Mariage' },
+          { icon: 'fa-book-bible',    label: 'Livre',        val: 'Éphésiens' },
+          { icon: 'fa-language',      label: 'Langue',       val: 'Français' },
+        ],
+        rating: 4.5,
+        ratingStars: 4,
+        ratingText: '92% des couples présents ont témoigné d\'un renouveau dans leur relation.',
+      },
+    };
+
+    /* ----------------------------------------------------------
+       MODAL – OUVERTURE & FERMETURE
+    ---------------------------------------------------------- */
+    const overlay    = document.getElementById('modalOverlay');
+    const modalClose = document.getElementById('modalClose');
+
+    function openModal(id) {
+      const d = predications[id];
+      if (!d) return;
+
+      // Image & hero
+      document.getElementById('modalImg').src = d.img;
+      document.getElementById('modalImg').alt = d.title;
+      document.getElementById('modalCat').innerHTML = d.cat;
+      document.getElementById('modalTitle').textContent = d.title;
+      document.getElementById('modalMeta').innerHTML = d.meta.map(m =>
+        `<div class="modal-meta-tag"><i class="fa-solid ${m.icon}"></i> ${m.text}</div>`
+      ).join('');
+
+      // Résumé
+      const summaryEl = document.getElementById('modalSummary');
+      summaryEl.innerHTML = `<h3 class="content-block-title"><i class="fa-solid fa-align-left"></i> Résumé du Message</h3>`
+        + d.summary.map(p => `<p>${p}</p>`).join('');
+
+      // Points clés
+      document.getElementById('keyPointsList').innerHTML = d.points.map((p, i) =>
+        `<div class="key-point">
+           <div class="key-point-num">${String(i+1).padStart(2,'0')}</div>
+           <p>${p}</p>
+         </div>`
+      ).join('');
+
+      // Application
+      document.getElementById('appList').innerHTML = d.app.map(a =>
+        `<div class="application-item"><i class="fa-solid ${a.icon}"></i><p>${a.text}</p></div>`
+      ).join('');
+
+      // Verset principal
+      document.getElementById('modalVerseRef').innerHTML  = `<i class="fa-solid fa-book-bible"></i> ${d.verseRef}`;
+      document.getElementById('modalVerseText').innerHTML =
+        `<i class="fa-solid fa-quote-left" style="color:var(--accent-yellow);margin-right:5px;font-size:0.75rem;"></i>${d.verseText}<i class="fa-solid fa-quote-right" style="color:var(--accent-yellow);margin-left:5px;font-size:0.75rem;"></i>`;
+      document.getElementById('modalVerseContext').textContent = d.verseCtx;
+
+      // Versets secondaires
+      document.getElementById('versesList').innerHTML = d.verses.map(v =>
+        `<div class="verse-mini">
+           <div class="verse-mini-ref"><i class="fa-solid fa-bookmark"></i> ${v.ref}</div>
+           <p class="verse-mini-text">${v.text}</p>
+         </div>`
+      ).join('');
+
+      // Infos rapides
+      document.getElementById('quickInfoList').innerHTML = d.quickInfo.map(q =>
+        `<div class="quick-info-row">
+           <i class="fa-solid ${q.icon}"></i>
+           <div><div class="qi-label">${q.label}</div><div class="qi-val">${q.val}</div></div>
+         </div>`
+      ).join('');
+
+      // Évaluation
+      document.getElementById('modalRatingNum').textContent = d.rating.toFixed(1);
+      document.getElementById('modalRatingStars').innerHTML = Array.from({length:5}, (_,i) =>
+        `<i class="fa-${i < d.ratingStars ? 'solid' : 'regular'} fa-star"></i>`
+      ).join('');
+      document.getElementById('modalRatingText').textContent = d.ratingText;
+
+      // Ouvrir
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      overlay.scrollTop = 0;
+    }
+
+    function closeModal() {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // Clic sur les cartes
+    document.querySelectorAll('.pred-card').forEach(card => {
+      function activate() { openModal(parseInt(card.dataset.id)); }
+      card.addEventListener('click', activate);
+      card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } });
+    });
+
+    /* ----------------------------------------------------------
+       FILTRE DES CATÉGORIES
+    ---------------------------------------------------------- */
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        // (Filtre visuel simple – dans une app réelle, on filtrerait les cartes)
+      });
+    });
+
+    /* ----------------------------------------------------------
+       INTERSECTION OBSERVER – FADE-IN
+    ---------------------------------------------------------- */
+    const io = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } }),
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+
+    /* ----------------------------------------------------------
+       MENU MOBILE
+    ---------------------------------------------------------- */
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileMenu   = document.getElementById('mobileMenu');
+    const mobileClose2 = document.getElementById('mobileClose');
+
+    hamburgerBtn.addEventListener('click', () => {
+      mobileMenu.classList.add('open');
+      hamburgerBtn.setAttribute('aria-expanded','true');
+      document.body.style.overflow = 'hidden';
+    });
+    mobileClose2.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      hamburgerBtn.setAttribute('aria-expanded','false');
+      document.body.style.overflow = '';
+    });
+    document.querySelectorAll('.mobile-menu a').forEach(a => {
+      a.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+  </script>
+
+
+
+  {% endblock content %}
+

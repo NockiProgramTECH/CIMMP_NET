@@ -92,6 +92,7 @@ class Temoignages(models.Model):
     subjet =models.CharField(max_length=50)
     temoignage =models.TextField()
     created_at  =models.DateTimeField(auto_created=True,default=timezone.now)
+    published =models.BooleanField(default=False)
         
         # Metadata
     class Meta:

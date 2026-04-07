@@ -909,6 +909,29 @@
      align-items: center;
      gap: 6px;
  }
+    .evenement-lieu i {
+        color: var(--accent-yellow);
+    }
+
+
+    /* un hover sur evenement  fait voir la description */
+
+    .evenement-description {
+        position: relative;
+        inset: 0;
+        background: rgba(0, 51, 102, 0.95);
+        color: var(--white);
+        padding: 24px;
+        opacity: 0;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+
+
 
  /* ============================================================
        GALERIE

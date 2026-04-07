@@ -13,24 +13,33 @@ def index(request):
     events =Evenement.objects.all()
     #filtrer les 3 dernier predications
     predication =Predication.objects.filter().order_by('-created_at')[:3]
+    temoignages =Temoignages.objects.filter(published=True).order_by('-created_at')[:3]
     context ={
         'events':events,
-        'predications':predication
+        'predications':predication,
+        'temoignages':temoignages
     }
 
     return render(request,"main/index_2.html",context)
 
+def predications_list(request):
+    predications = Predication.objects.all().order_by('-date')[:20]
+    context = {
+        'predications': predications
+    }
+    return render(request, "main/predications.html", context)
+
 
 def predication_detail(request,slug):
     pre_detail =get_object_or_404(Predication,slug=slug)
-    predications =Predication.objects.all()
-    context ={
-        'pre_detail':pre_detail,
-        'predications':predications
+  
+    context = {
+        'pre_detail': pre_detail,
 
+        'related_predications': Predication.objects.exclude(id=pre_detail.id).order_by('-date')[:5]
     }
     
-    return render(request,"main/predications.html",context)
+    return render(request,"main/predications_details.html",context)
 
 #recevoir les requette ajax (js --->Django)
 
@@ -72,6 +81,8 @@ def submit_temoignage(request):
         return JsonResponse({'success': False, 'error': 'JSON invalide'}, status=400)
     except Exception as e:
         return JsonResponse({'success': False, 'error': f'Erreur serveur: {str(e)}'}, status=500)
+
+
 
 
 

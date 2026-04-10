@@ -108,7 +108,17 @@
 
 
          </div>
-          <a class="btn-listen" href ="/"><i class="fa-solid fa-play"></i>Regarder la video</a>
+
+          <div class="audio-container">
+    <p><strong><i class="fa-solid fa-headphones"></i> Prédication :</strong> {{ pre_detail.titre }}</p>
+    
+    <audio id="player" controls controlsList="nodownload" oncontextmenu="return false;">
+        <source src="{{ pre_detail.audio.url }}" type="audio/mpeg">
+        Votre navigateur ne supporte pas la lecture audio.
+    </audio>
+</div>
+         
+           <a class="btn-listen" href ="/"><i class="fa-solid fa-play"></i>Regarder la video</a>
           <button class="btn-partager"><i class="fa-solid fa-share-nodes"></i> Partager cette Prédication</button>
         
 

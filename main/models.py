@@ -13,7 +13,8 @@ class Predication(models.Model):
     titre = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     date = models.DateTimeField()
-    url_video =models.URLField(blank=True)  # lien vers la vidéo de la prédication
+    url_video =models.URLField(blank=True)
+    audio =models.FileField(upload_to="audio",blank=True,null=True) # lien vers la vidéo de la prédication
     resume = models.TextField(blank=True)
     verset_principal = models.CharField(max_length=100, blank=True)
     contenu = models.TextField(blank=True)  # texte complet ou lien vidéo/audio

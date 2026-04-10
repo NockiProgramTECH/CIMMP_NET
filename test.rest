@@ -1,0 +1,16 @@
+
+
+POST http://127.0.0.1:8000/cimppApi/temoignages/
+
+Content-Type: 'application/json'
+
+ {
+     
+        "first_name": "Lankoande",
+        "last_name": "fabrice",
+    
+        "phone": "05160065",
+        "subjet": "guerion",
+        "temoignage": "je suis fabrice de la !",
+        "published": false
+    }

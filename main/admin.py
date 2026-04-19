@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 
 from django.contrib import admin
-from .models import Predication, Evenement, ProgrammeHebdo,Temoignages
+from .models import LiveStream, Predication, Evenement, ProgrammeHebdo,Temoignages
 
 admin.site.register(Predication)
 # @admin.register(Predication)
@@ -50,3 +50,8 @@ class ProgrammeHebdoAdmin(admin.ModelAdmin):
     list_filter = ['jour', 'badge_special']
     ordering = ['ordre']
     list_per_page = 25
+
+@admin.register(LiveStream)
+class LiveStreamAdmin(admin.ModelAdmin):
+    list_display = ['titre', 'url', 'is_live', 'updated_at']
+    list_editable = ['is_live', 'url']

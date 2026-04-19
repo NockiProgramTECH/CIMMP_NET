@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from main.models import Evenement, Predication, Temoignages, ProgrammeHebdo
+from main.models import Evenement, Predication, Temoignages, ProgrammeHebdo, LiveStream
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     """
@@ -75,4 +75,12 @@ class ProgrammeHebdoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProgrammeHebdo
+        fields = '__all__'
+
+class LiveStreamSerializer(serializers.ModelSerializer):
+    """
+    Sérialiseur pour le modèle LiveStream.
+    """
+    class Meta:
+        model = LiveStream
         fields = '__all__'

@@ -4,13 +4,14 @@ from rest_framework import viewsets, permissions, status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from main.models import Evenement, Predication, Temoignages, ProgrammeHebdo
+from main.models import Evenement, Predication, Temoignages, ProgrammeHebdo, LiveStream
 from .serializers import (
     EvenementSerializer, 
     PredicationSerializer, 
     TemoignagesSerializer, 
     UserRegisterSerializer,
-    ProgrammeHebdoSerializer
+    ProgrammeHebdoSerializer,
+    LiveStreamSerializer
 )
 
 class RegisterUserView(generics.CreateAPIView):
@@ -44,29 +45,40 @@ class UserProfileView(APIView):
 
 class EvenementViewSet(viewsets.ModelViewSet):
     """
-    Gestion des événements.
-    - Lecture publique autorisée.
-    - Création/Modification réservée aux administrateurs via DjangoModelPermissions.
+    Gestion des événements (CRUD complet).
+    - GET (list/retrieve) : Public (AnonReadOnly).
+    - POST, PUT, PATCH, DELETE : Admin uniquement (DjangoModelPermissions).
     """
     queryset = Evenement.objects.all()
     serializer_class = EvenementSerializer
+    # Utilise la permission par défaut : DjangoModelPermissionsOrAnonReadOnly
 
 class PredicationViewSet(viewsets.ModelViewSet):
     """
-    Gestion des prédications.
-    - Lecture publique autorisée.
-    - Création/Modification réservée aux administrateurs.
+    Gestion des prédications (CRUD complet).
+    - GET (list/retrieve) : Public.
+    - POST, PUT, PATCH, DELETE : Admin uniquement.
     """
     queryset = Predication.objects.all()
     serializer_class = PredicationSerializer
 
 class TemoignagesViewSet(viewsets.ModelViewSet):
     """
-    Gestion des témoignages avec modération automatique.
+    Gestion des témoignages (CRUD complet).
+    - POST (create) : Public.
+    - GET (list) : Public (uniquement les publiés) ou Admin (tous).
+    - PUT, PATCH, DELETE : Admin uniquement.
     """
     queryset = Temoignages.objects.all()
     serializer_class = TemoignagesSerializer
-    permission_classes = [permissions.AllowAny]
+
+    def get_permissions(self):
+        """
+        Définit les permissions selon l'action.
+        """
+        if self.action == 'create':
+            return [permissions.AllowAny()]
+        return [permissions.DjangoModelPermissionsOrAnonReadOnly()]
 
     def create(self, request, *args, **kwargs):
         """
@@ -93,7 +105,7 @@ class TemoignagesViewSet(viewsets.ModelViewSet):
         """
         if self.request.user.is_staff:
             return Temoignages.objects.all()
-
+        
         if self.action == 'list':
             return Temoignages.objects.filter(published=True).order_by('-created_at')
         return Temoignages.objects.all()
@@ -101,9 +113,32 @@ class TemoignagesViewSet(viewsets.ModelViewSet):
 
 class ProgrammeHebdoViewSet(viewsets.ModelViewSet):
     """
-    Gestion du programme hebdomadaire.
-    - Lecture publique.
-    - Modification réservée aux administrateurs.
+    Gestion du programme hebdomadaire (CRUD complet).
+    - GET : Public.
+    - POST, PUT, PATCH, DELETE : Admin.
     """
     queryset = ProgrammeHebdo.objects.all()
     serializer_class = ProgrammeHebdoSerializer
+
+class LiveStreamViewSet(viewsets.ModelViewSet):
+    """
+    Gestion du lien direct (Live Stream) (CRUD complet).
+    - GET : Retourne le direct actuel (list personnalisé) ou un spécifique (retrieve).
+    - POST, PUT, PATCH, DELETE : Admin.
+    """
+    queryset = LiveStream.objects.all()
+    serializer_class = LiveStreamSerializer
+
+    def list(self, request, *args, **kwargs):
+        """
+        Cas particulier pour le Frontend : retourne le dernier direct actif.
+        Si l'utilisateur est admin et veut la liste réelle, il peut utiliser le paramètre ?all=true
+        """
+        if request.user.is_staff and request.query_params.get('all') == 'true':
+            return super().list(request, *args, **kwargs)
+            
+        last_live = LiveStream.objects.last()
+        if last_live:
+            serializer = self.get_serializer(last_live)
+            return Response(serializer.data)
+        return Response({"message": "Aucun direct configuré"}, status=status.HTTP_404_NOT_FOUND)

@@ -1,163 +1,221 @@
-# Documentation de l'API CIMPP (Mise à jour)
+# Documentation de l'API CIMPP (Spécifications JSON)
 
-Cette API supporte désormais l'authentification JWT et la gestion des comptes utilisateurs pour l'application Flutter.
+Cette API utilise le format JSON pour tous les échanges de données, sauf pour les uploads de fichiers qui nécessitent `multipart/form-data`.
 
 ## Informations Générales
 - **URL de Base** : `http://<votre-domaine>/cimppApi/`
-- **Authentification** : JSON Web Token (JWT). Utilisez le header `Authorization: Bearer <access_token>`.
+- **Authentification** : JWT (`Authorization: Bearer <access_token>`).
 
 ---
 
 ## 1. Authentification & Comptes (`/auth/`)
 
 ### Inscription
-- `POST /auth/register/` : Créer un nouveau compte.
-    - **Champs** : `username` (Téléphone), `email`, `password`, `first_name`, `last_name`.
+- `POST /auth/register/`
+    - **Entrée (JSON)** :
+    ```json
+    {
+        "username": "01234567", // Numéro de téléphone
+        "email": "user@example.com",
+        "password": "password123",
+        "first_name": "Jean",
+        "last_name": "Dupont"
+    }
+    ```
+    - **Sortie (JSON - 201 Created)** :
+    ```json
+    {
+        "id": 1,
+        "username": "01234567",
+        "email": "user@example.com",
+        "first_name": "Jean",
+        "last_name": "Dupont"
+    }
+    ```
 
 ### Connexion (Login)
-- `POST /auth/token/` : Obtenir les jetons d'accès et de rafraîchissement.
-    - **Champs** : `username` (Email ou Téléphone) et `password`.
-    - **Retour** : `{ "access": "...", "refresh": "..." }`.
-
-### Rafraîchissement du Jeton
-- `POST /auth/token/refresh/` : Obtenir un nouveau jeton d'accès.
-    - **Champs** : `refresh`.
+- `POST /auth/token/`
+    - **Entrée (JSON)** :
+    ```json
+    {
+        "username": "01234567", // ou email
+        "password": "password123"
+    }
+    ```
+    - **Sortie (JSON - 200 OK)** :
+    ```json
+    {
+        "access": "eyJhbG...",
+        "refresh": "eyJhbG..."
+    }
+    ```
 
 ### Profil Utilisateur
-- `GET /auth/profile/` : Récupérer les informations de l'utilisateur connecté (nécessite d'être authentifié).
-{
-    "id": 1,
-    "username": "admin",
-    "email": "",
-    "first_name": "",
-    "last_name": "",
-    "is_staff": true
-}
+- `GET /auth/profile/`
+    - **Sortie (JSON - 200 OK)** :
+    ```json
+    {
+        "id": 1,
+        "username": "admin",
+        "email": "admin@cimpp.org",
+        "first_name": "Admin",
+        "last_name": "CIMPP",
+        "is_staff": true
+    }
+    ```
+
 ---
 
 ## 2. Événements (`/evenements/`)
 
-### Endpoints
-- `GET /evenements/` : Liste publique.
- {
-        "id": 1,
-        "name": "lankoande",
-        "slug": "mangue",
-        "description": "uibjkj\r\nibj",
-        "date": "2026-04-30T06:00:00Z",
-        "lieu": "Eglise CIMPP",
-        "image": "http://127.0.0.1:8000/media/evenements/WhatsApp_Image_2026-04-03_at_16.24.59.jpeg",
-        "created_at": "2026-04-07T14:06:12.407217Z",
-        "updated_at": "2026-04-07T14:06:12.407244Z"
-    }
+### Liste & Détails
+- `GET /evenements/` (Liste) ou `GET /evenements/{id}/` (Détails)
+    - **Sortie (JSON)** :
+    ```json
+    [
+        {
+            "id": 1,
+            "name": "Conférence Foi",
+            "slug": "conference-foi",
+            "description": "Description détaillée...",
+            "date": "2026-05-15T18:00:00Z",
+            "lieu": "Eglise CIMPP",
+            "image": "http://127.0.0.1:8000/media/evenements/img.jpg",
+            "created_at": "2026-04-19T10:00:00Z",
+            "updated_at": "2026-04-19T10:00:00Z"
+        }
+    ]
+    ```
 
-- `GET /evenements/{id}/` : Détails.
-- `POST /evenements/` : **Admin uniquement**. Créer un événement.
- {
-      
-        "name": "lankoande",
-        "slug": "mangue",
-        "description": "uibjkj\r\nibj",
-        "date": "2026-04-30T06:00:00Z",
-        "lieu": "Eglise CIMPP",
-        "image": "http://127.0.0.1:8000/media/evenements/WhatsApp_Image_2026-04-03_at_16.24.59.jpeg",
-       
-    }
-
-- `PUT/PATCH /evenements/{id}/` : **Admin uniquement**. Modifier un événement.
-- `DELETE /evenements/{id}/` : **Admin uniquement**. Supprimer un événement.
+### Création (Admin)
+- `POST /evenements/`
+    - **Type** : `multipart/form-data`
+    - **Entrée** : `name` (string), `description` (text), `date` (datetime), `lieu` (string), `image` (file).
 
 ---
 
 ## 3. Prédications (`/predications/`)
 
-### Endpoints
-- `GET /predications/` : Liste publique.
-[
-   
-    {
-        "id": ,
-        "img_couverture": "http://127.0.0.1:8000/media/predications/650203946_122126143605064169_5052247897823378937_n.jpg",
-        "titre": "titre3",
-        "slug": "titre3",
-        "date": "2026-04-01T00:34:34Z",
-        "url_video": "https://python.org",
-        "audio": null,
-        "resume": "djskddddsjskj\r\ndsjsdhdsjkds\r\ndsmidkdsds\r\ndopzeoezjklsd\r\nioirkeerismoenz\r\nezopdsnk\r\nd",
-        "verset_principal": "dskdsjisdubdss^psdl",
-        "contenu": "sdklsdçojçezpojqodj^r qqkdnqopjerqknqoieoqsj bdqojqo\r\ndqifçpqmjqkqdjq",
-        "predicateur": "pasterur",
-        "interprete": "pasteru",
-        "theme": "pasteru",
-        "created_at": "2026-04-01T00:35:34.637849Z",
-        "updated_at": "2026-04-13T17:58:33.680574Z"
-    },
-    
-]
-- `GET /predications/{id}/` : Détails.
-- `POST /predications/` : **Admin uniquement**. Ajouter une prédication.
+### Liste & Détails
+- `GET /predications/`
+    - **Sortie (JSON)** :
+    ```json
+    [
+        {
+            "id": 1,
+            "img_couverture": "http://domain.com/media/predications/cover.jpg",
+            "titre": "La Puissance de la Prière",
+            "slug": "la-puissance-de-la-priere",
+            "date": "2026-04-01T10:00:00Z",
+            "url_video": "https://youtube.com/watch?v=...",
+            "audio": "http://domain.com/media/audio/sermon.mp3",
+            "resume": "Bref résumé...",
+            "verset_principal": "Matthieu 21:22",
+            "contenu": "Texte intégral...",
+            "predicateur": "Pasteur Emmanuel",
+            "interprete": "Frère Marc",
+            "theme": "Foi",
+            "created_at": "2026-04-01T10:00:00Z",
+            "updated_at": "2026-04-19T10:00:00Z"
+        }
+    ]
+    ```
 
-  {
-        "img_couverture": "http://127.0.0.1:8000/media/predications/650203946_122126143605064169_5052247897823378937_n.jpg",
-        "titre": "titre3",
-        "slug": "titre3",
-        "date": "2026-04-01T00:34:34Z",
-        "url_video": "https://python.org",
-        "audio": null,
-        "resume": "djskddddsjskj\r\ndsjsdhdsjkds\r\ndsmidkdsds\r\ndopzeoezjklsd\r\nioirkeerismoenz\r\nezopdsnk\r\nd",
-        "verset_principal": "dskdsjisdubdss^psdl",
-        "contenu": "sdklsdçojçezpojqodj^r qqkdnqopjerqknqoieoqsj bdqojqo\r\ndqifçpqmjqkqdjq",
-        "predicateur": "pasterur",
-        "interprete": "pasteru",
-        "theme": "pasteru",
-      
-    },
-    
-
-- `PUT/PATCH /predications/{id}/` : **Admin uniquement**. Modifier.
-- `DELETE /predications/{id}/` : **Admin uniquement**. Supprimer.
+### Création (Admin)
+- `POST /predications/`
+    - **Type** : `multipart/form-data`
+    - **Entrée** : `titre`, `date`, `url_video` (optionnel), `resume`, `verset_principal`, `contenu`, `predicateur`, `interprete` (optionnel), `theme`, `img_couverture` (file), `audio` (file, optionnel).
 
 ---
 
 ## 4. Témoignages (`/temoignages/`)
 
-### Endpoints
-- `GET /temoignages/` :
-    - **Public** : Liste des témoignages publiés uniquement.
-    - **Admin** : Liste de tous les témoignages (incluant ceux à modérer).
-
-     {
+### Liste (Public)
+- `GET /temoignages/` : Retourne uniquement les témoignages avec `published: true`.
+- **Sortie (JSON)** :
+```json
+[
+    {
         "id": 1,
-        "first_name": "Albertine",
-        "last_name": "Soubeiga",
-        "full_name": "Albertine-Soubeiga",
-        "phone": "24943687",
-        "subjet": "guerison",
-        "temoignage": "J'Y GjygNnd.gsuhsbbs\nSjsysns",
-        "created_at": "2026-04-10T16:11:19.504381Z",
-        "published": false
+        "first_name": "Marie",
+        "last_name": "Kaboré",
+        "full_name": "Marie-Kaboré",
+        "phone": "00000000",
+        "subjet": "Guérison",
+        "temoignage": "J'ai été guérie...",
+        "created_at": "2026-04-10T16:00:00Z",
+        "published": true
     }
-- `POST /temoignages/` : Soumettre un témoignage (Public). Statut par défaut : `non publié`.
- {
-       
-        "first_name": "Albertine",
-        "last_name": "Soubeiga",
-        "full_name": "Albertine-Soubeiga",
-        "phone": "24943687",
-        "subjet": "guerison",
-        "temoignage": "J'Y GjygNnd.gsuhsbbs\nSjsysns",
+]
+```
+
+### Soumission (Public)
+- `POST /temoignages/`
+    - **Entrée (JSON)** :
+    ```json
+    {
+        "first_name": "Marie",
+        "last_name": "Kaboré",
+        "phone": "00000000",
+        "subjet": "Guérison",
+        "temoignage": "J'ai été guérie..."
     }
-- `PATCH /temoignages/{id}/` : **Admin uniquement**. Permet de changer `published: true` pour valider un témoignage.
+    ```
 
 ---
 
-## Gestion des Médias
-Les fichiers (images et audio) sont servis via le préfixe `/media/`.
-Pour uploader via l'API (POST), utilisez un `multipart/form-data`.
+## 5. Programmes Hebdomadaires (`/programmes-hebdo/`)
 
-## Codes de Statut HTTP
-- `200 OK` : Succès.
-- `201 Created` : Création réussie.
-- `401 Unauthorized` : Jeton manquant ou invalide.
-- `403 Forbidden` : Droits insuffisants (tentative d'admin sans être staff).
-- `400 Bad Request` : Erreur de validation des données.
+### Liste
+- `GET /programmes-hebdo/`
+- **Sortie (JSON)** :
+```json
+[
+    {
+        "id": 1,
+        "jour": "dimanche",
+        "jour_display": "Dimanche",
+        "horaire": "08:00 - 11:00",
+        "activite": "Culte d'Adoration",
+        "icone": "fa-solid fa-church",
+        "badge_special": true,
+        "salle": "Grand Temple",
+        "responsable": "Pasteur Principal",
+        "ordre": 1
+    }
+]
+```
+
+---
+
+## 6. Direct (Live Stream) (`/live/`)
+
+### Récupérer le lien actuel
+- `GET /live/`
+- **Sortie (JSON - 200 OK)** :
+```json
+{
+    "id": 1,
+    "titre": "Culte en Direct",
+    "url": "https://www.youtube.com/live/xyz123",
+    "is_live": true,
+    "updated_at": "2026-04-19T14:30:00Z"
+}
+```
+
+### Mise à jour (Admin)
+- `PATCH /live/{id}/`
+    - **Entrée (JSON)** :
+    ```json
+    {
+        "url": "nouvelle_url",
+        "is_live": false
+    }
+    ```
+
+---
+
+## Codes d'Erreurs
+- `400 Bad Request` : Erreur de validation (ex: champ manquant).
+- `401 Unauthorized` : Token JWT invalide ou expiré.
+- `403 Forbidden` : Tentative d'action admin par un utilisateur standard.

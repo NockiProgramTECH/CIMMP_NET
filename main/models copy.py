@@ -82,7 +82,7 @@ class Evenement(models.Model):
 
     
     def get_absolute_url(self):
-        return reverse('evenement_detail', args=[str(self.slug)])
+       return reverse('evenement_detail', args=[str(self.slug)])
 
 class Temoignages(models.Model):
     """Model temognage"""
@@ -113,31 +113,7 @@ class Temoignages(models.Model):
         return f'{self.first_name}-{self.last_name}'
 
 class ProgrammeHebdo(models.Model):
-    JOUR_CHOICES = [
-        ('lundi', 'Lundi'),
-        ('mardi', 'Mardi'),
-        ('mercredi', 'Mercredi'),
-        ('jeudi', 'Jeudi'),
-        ('vendredi', 'Vendredi'),
-        ('samedi', 'Samedi'),
-        ('dimanche', 'Dimanche'),
-    ]
-    
-    jour = models.CharField(max_length=10, choices=JOUR_CHOICES)
-    horaire = models.CharField(max_length=20)
-    activite = models.CharField(max_length=100)
-    icone = models.CharField(max_length=50, default="fa-solid fa-hands-praying")
-    badge_special = models.BooleanField(default=False)
-    salle = models.CharField(max_length=50)
-    responsable = models.CharField(max_length=100)
-    ordre = models.PositiveIntegerField(default=0, help_text="Pour trier les activités")
-    
-    class Meta:
-        verbose_name = "Direct"
-        verbose_name_plural = "Direct"
-
-    def __str__(self):
-        return self.titre
+    # ... (code existant) ...
     
     def get_jour_display(self):
         return dict(self.JOUR_CHOICES).get(self.jour, self.jour)
@@ -155,5 +131,4 @@ class LiveStream(models.Model):
 
     def __str__(self):
         return self.titre
-    
     

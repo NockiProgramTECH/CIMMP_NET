@@ -86,7 +86,7 @@ class Evenement(models.Model):
 
 class Temoignages(models.Model):
     """Model temognage"""
-        # Fields
+    # Fields
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     phone =models.CharField(max_length =10)
@@ -95,21 +95,51 @@ class Temoignages(models.Model):
     created_at  =models.DateTimeField(auto_created=True,default=timezone.now)
     published =models.BooleanField(default=False)
         
-        # Metadata
+    # Metadata
     class Meta:
-            verbose_name = "Temoignage"
-            verbose_name_plural = "Temoignages"
-            # ordering = ['name']
+        verbose_name = "Temoignage"
+        verbose_name_plural = "Temoignages"
         
-        # Methods
+    # Methods
     def __str__(self):
-            return self.full_name
-        
-    def get_absolute_url(self):
-            return reverse('temoignage_detail', args=[str(self.id)])
+        return self.full_name
     
-        # Properties
+    def get_absolute_url(self):
+        return reverse('temoignage_detail', args=[str(self.id)])
+    
+    # Properties
     @property
     def full_name (self):
-            return f'{self.first_name}-{self.last_name}'
+        return f'{self.first_name}-{self.last_name}'
+
+class ProgrammeHebdo(models.Model):
+    JOUR_CHOICES = [
+        ('lundi', 'Lundi'),
+        ('mardi', 'Mardi'),
+        ('mercredi', 'Mercredi'),
+        ('jeudi', 'Jeudi'),
+        ('vendredi', 'Vendredi'),
+        ('samedi', 'Samedi'),
+        ('dimanche', 'Dimanche'),
+    ]
+    
+    jour = models.CharField(max_length=10, choices=JOUR_CHOICES)
+    horaire = models.CharField(max_length=20)
+    activite = models.CharField(max_length=100)
+    icone = models.CharField(max_length=50, default="fa-solid fa-hands-praying")
+    badge_special = models.BooleanField(default=False)
+    salle = models.CharField(max_length=50)
+    responsable = models.CharField(max_length=100)
+    ordre = models.PositiveIntegerField(default=0, help_text="Pour trier les activités")
+    
+    class Meta:
+        ordering = ['ordre']
+        verbose_name = "Programme Hebdo"
+        verbose_name_plural = "Programmes Hebdo"
+    
+    def __str__(self):
+        return f"{self.get_jour_display()} - {self.activite}"
+
+    def get_jour_display(self):
+        return dict(self.JOUR_CHOICES).get(self.jour, self.jour)
     

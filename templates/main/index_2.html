@@ -296,7 +296,7 @@
   </section>
 
   <!-- ============================================================
-       PROGRAMME HEBDOMADAIRE
+       PROGRAMME HEBDOMADAIRE (VISUEL)
   ============================================================ -->
   <section id="programme" aria-labelledby="programme-title">
     <div class="container">
@@ -304,31 +304,174 @@
       <h2 class="section-title" id="programme-title">Programme Hebdomadaire</h2>
       <p class="section-subtitle">Rejoignez-nous à chaque réunion pour grandir ensemble dans la Parole et l'Esprit.</p>
 
-      <div class="programme-wrapper fade-in">
-        <table role="table" aria-label="Programme hebdomadaire CIMPP">
-          <thead>
-            <tr>
-              <th scope="col"><i class="fa-solid fa-calendar-week" style="margin-right:6px;color:var(--accent-yellow);"></i>Jour</th>
-              <th scope="col"><i class="fa-regular fa-clock" style="margin-right:6px;color:var(--accent-yellow);"></i>Horaire</th>
-              <th scope="col"><i class="fa-solid fa-list-check" style="margin-right:6px;color:var(--accent-yellow);"></i>Activité</th>
-              <th scope="col"><i class="fa-solid fa-location-pin" style="margin-right:6px;color:var(--accent-yellow);"></i>Lieu</th>
-              <th scope="col"><i class="fa-solid fa-user-tie" style="margin-right:6px;color:var(--accent-yellow);"></i>Responsable</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>Lundi</td><td>18h00 – 19h30</td><td><span class="badge-activite"><i class="fa-solid fa-hands-praying"></i> Prière du soir</span></td><td>Salle de Prière</td><td>Département Intercession</td></tr>
-            <tr><td>Mardi</td><td>17h30 – 19h00</td><td><span class="badge-activite"><i class="fa-solid fa-book-open"></i> Étude Biblique</span></td><td>Grande Salle</td><td>Pasteur Emmanuel K.</td></tr>
-            <tr><td>Mercredi</td><td>18h00 – 20h00</td><td><span class="badge-activite badge-special"><i class="fa-solid fa-fire"></i> Veillée de Prière</span></td><td>Temple Principal</td><td>Prophète Samuel D.</td></tr>
-            <tr><td>Jeudi</td><td>17h00 – 18h30</td><td><span class="badge-activite"><i class="fa-solid fa-venus"></i> Réunion des Femmes</span></td><td>Salle Annexe</td><td>Pasteure Marie-Claire O.</td></tr>
-            <tr><td>Vendredi</td><td>18h00 – 19h30</td><td><span class="badge-activite"><i class="fa-solid fa-music"></i> Répétition Louange</span></td><td>Salle de Musique</td><td>Équipe Worship</td></tr>
-            <tr><td>Samedi</td><td>15h00 – 17h00</td><td><span class="badge-activite"><i class="fa-solid fa-child"></i> École du Dimanche (Prép.)</span></td><td>Classe Enfants</td><td>Département Jeunesse</td></tr>
-            <tr><td><strong>Dimanche</strong></td><td><strong>09h00 – 12h30</strong></td><td><span class="badge-activite badge-special"><i class="fa-solid fa-church"></i> Culte Principal</span></td><td><strong>Temple Principal</strong></td><td>Pasteur Emmanuel K.</td></tr>
-            <tr><td>Dimanche</td><td>15h00 – 17h00</td><td><span class="badge-activite"><i class="fa-solid fa-graduation-cap"></i> Formation Disciples</span></td><td>Grande Salle</td><td>Équipe Pastorale</td></tr>
-          </tbody>
-        </table>
+      <div class="programme-visual-grid fade-in">
+        {% for program in programme_hebdo %}
+        <div class="program-card{% if program.badge_special %} special{% endif %}">
+          <div class="program-day-badge">{{ program.get_jour_display }}</div>
+          
+          <div class="program-icon-wrap">
+            <i class="{{ program.icone }}"></i>
+          </div>
+          
+          <div class="program-info">
+            <h3 class="program-activity">{{ program.activite }}</h3>
+            
+            <div class="program-details">
+              <div class="program-detail-item">
+                <i class="fa-regular fa-clock"></i>
+                <span>{{ program.horaire }}</span>
+              </div>
+              <div class="program-detail-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <span>{{ program.salle }}</span>
+              </div>
+              <div class="program-detail-item">
+                <i class="fa-solid fa-user-tie"></i>
+                <span>{{ program.responsable }}</span>
+              </div>
+            </div>
+          </div>
+          
+          {% if program.badge_special %}
+          <div class="special-glow"></div>
+          {% endif %}
+        </div>
+        {% empty %}
+        <div class="text-center text-muted w-100">Aucun programme disponible pour le moment.</div>
+        {% endfor %}
       </div>
     </div>
   </section>
+
+  <style>
+    /* === NOUVEAU VISUEL AGENDA === */
+    .programme-visual-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .program-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 35px 25px 25px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid #f0f0f0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .program-card:hover {
+      transform: translateY(-12px);
+      border-color: var(--accent-yellow);
+      box-shadow: 0 20px 40px rgba(0,51,102,0.12);
+    }
+
+    .program-day-badge {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary-blue);
+      color: var(--accent-yellow);
+      padding: 6px 24px;
+      border-radius: 0 0 15px 15px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      z-index: 2;
+    }
+
+    .program-icon-wrap {
+      width: 90px;
+      height: 90px;
+      background: var(--blue-light);
+      color: var(--primary-blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      border: 4px solid #fff;
+    }
+
+    .program-card:hover .program-icon-wrap {
+      transform: scale(1.1) rotate(8deg);
+      background: var(--accent-yellow);
+      color: var(--primary-blue);
+    }
+
+    .program-activity {
+      font-family: var(--font-title);
+      font-size: 1.25rem;
+      color: var(--primary-blue);
+      margin-bottom: 20px;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+
+    .program-details {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 15px;
+      border-top: 1px dashed #ddd;
+    }
+
+    .program-detail-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: #555;
+      text-align: left;
+    }
+
+    .program-detail-item i {
+      color: var(--detail-red);
+      width: 18px;
+      font-size: 1rem;
+    }
+
+    .program-card.special {
+      background: linear-gradient(135deg, #ffffff 0%, var(--gold-light) 100%);
+      border-color: var(--accent-yellow);
+    }
+
+    .special-glow {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+      pointer-events: none;
+      animation: rotate-glow 10s linear infinite;
+    }
+
+    @keyframes rotate-glow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .programme-visual-grid {
+        grid-template-columns: 1fr;
+        padding: 0 10px;
+      }
+    }
+  </style>
 
   <!-- ============================================================
        EVENEMENTS
@@ -685,25 +828,253 @@
   </style>
 
   <!-- ============================================================
-       VERSET DU JOUR
+       ESPACE NOUVELLE VIE (CONVERSION)
   ============================================================ -->
-  <section id="verset" aria-labelledby="verset-title">
+  <section id="nouvelle-vie" class="section-conversion">
     <div class="container">
-      <div class="verset-card fade-in">
-        <span class="verset-label" id="verset-title">
-          <i class="fa-solid fa-cross"></i> &nbsp;Inspiration Divine – Verset du Jour&nbsp; <i class="fa-solid fa-cross"></i>
-        </span>
-        <blockquote class="verset-quote" id="verset-quote">
-          <i class="fa-solid fa-quote-left"></i>
-          <span id="verset-text">Chargement du verset...</span>
-          <i class="fa-solid fa-quote-right"></i>
-        </blockquote>
-        <div class="verset-divider"></div>
-        <p class="verset-reference" id="verset-reference"><i class="fa-solid fa-book-bible"></i> &nbsp; Chargement...</p>
-        <p class="verset-context">Méditez cette Parole aujourd'hui et laissez le Berger d'Israël guider vos pas dans Sa parfaite volonté.</p>
+      <div class="conversion-card fade-in">
+        <div class="conversion-content">
+          <span class="section-tag">Un Nouveau Départ</span>
+          <h2 class="section-title">Commencer une Nouvelle Vie avec Jésus</h2>
+          <p class="conversion-intro">
+            Peu importe votre passé, vos doutes ou vos fardeaux, sachez que vous êtes aimé d'un amour inconditionnel. Faire un pas vers Dieu est une démarche personnelle et intime. Ici, il n'y a **aucun jugement**, seulement une main tendue.
+          </p>
+
+          <div class="conversion-steps-grid">
+            <div class="step-item">
+              <div class="step-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+              <h3>Dieu vous attend</h3>
+              <p>Il vous connaît par votre nom et désire restaurer votre vie en abondance.</p>
+            </div>
+            <div class="step-item">
+              <div class="step-icon"><i class="fa-solid fa-dove"></i></div>
+              <h3>La Paix intérieure</h3>
+              <p>Recevez une paix que le monde ne peut donner, une joie qui ne finit jamais.</p>
+            </div>
+          </div>
+
+          <div class="prayer-box">
+            <div class="prayer-header">
+              <i class="fa-solid fa-hands-praying"></i>
+              <span>Une simple prière du cœur</span>
+            </div>
+            <p class="prayer-text">
+              « Seigneur Jésus, je reconnais que j'ai besoin de Toi. Je T'ouvre la porte de mon cœur aujourd'hui. Merci de m'aimer et de me pardonner. Je veux marcher avec Toi et commencer une nouvelle vie à Tes côtés. Amen. »
+            </p>
+          </div>
+
+          <div class="conversion-actions">
+            <p class="confidential-note"><i class="fa-solid fa-lock"></i> Votre démarche est strictement confidentielle.</p>
+            <div class="action-buttons">
+              <a href="https://wa.me/22670000000?text=Bonjour,%20je%20souhaite%20en%20savoir%20plus%20sur%20la%20vie%20avec%20Christ." target="_blank" class="btn btn-whatsapp-private">
+                <i class="fa-brands fa-whatsapp"></i> Parler à un conseiller (Privé)
+              </a>
+              <a href="#localisation" class="btn btn-outline-dark">
+                <i class="fa-solid fa-church"></i> Nous rendre visite
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="conversion-visual">
+          <img src="https://images.unsplash.com/photo-1515023115689-589c3386b832?w=800&q=80" alt="Paix et espoir" loading="lazy">
+          <div class="visual-quote">
+            <p>« Si quelqu'un est en Christ, il est une nouvelle créature. »</p>
+            <span>2 Corinthiens 5:17</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
+
+  <style>
+    /* === SECTION CONVERSION / NOUVELLE VIE === */
+    .section-conversion {
+      padding: 100px 0;
+      background: linear-gradient(to bottom, #fdfdfd, #f4f7f6);
+    }
+
+    .conversion-card {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      background: #fff;
+      border-radius: 30px;
+      overflow: hidden;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .conversion-content {
+      padding: 60px;
+    }
+
+    .conversion-intro {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 40px;
+      line-height: 1.7;
+    }
+
+    .conversion-steps-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .step-item {
+      text-align: left;
+    }
+
+    .step-icon {
+      font-size: 2rem;
+      color: var(--detail-red);
+      margin-bottom: 15px;
+    }
+
+    .step-item h3 {
+      font-family: var(--font-title);
+      color: var(--primary-blue);
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .step-item p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .prayer-box {
+      background: var(--blue-light);
+      padding: 30px;
+      border-radius: 20px;
+      margin-bottom: 40px;
+      border-left: 5px solid var(--primary-blue);
+    }
+
+    .prayer-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 15px;
+      color: var(--primary-blue);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+
+    .prayer-text {
+      font-family: var(--font-title);
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--primary-blue);
+      line-height: 1.6;
+    }
+
+    .conversion-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .confidential-note {
+      font-size: 0.8rem;
+      color: #888;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn-whatsapp-private {
+      background: #25D366;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    }
+
+    .btn-whatsapp-private:hover {
+      background: #20ba5a;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+      color: #fff;
+    }
+
+    .btn-outline-dark {
+      border: 2px solid var(--primary-blue);
+      color: var(--primary-blue);
+    }
+
+    .btn-outline-dark:hover {
+      background: var(--primary-blue);
+      color: #fff;
+    }
+
+    .conversion-visual {
+      position: relative;
+    }
+
+    .conversion-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .visual-quote {
+      position: absolute;
+      bottom: 40px;
+      left: 40px;
+      right: 40px;
+      background: rgba(0, 51, 102, 0.85);
+      padding: 25px;
+      border-radius: 15px;
+      color: #fff;
+      backdrop-filter: blur(5px);
+    }
+
+    .visual-quote p {
+      font-family: var(--font-title);
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+
+    .visual-quote span {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-yellow);
+    }
+
+    @media (max-width: 1024px) {
+      .conversion-card {
+        grid-template-columns: 1fr;
+      }
+      .conversion-visual {
+        height: 300px;
+        order: -1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .conversion-content {
+        padding: 30px 20px;
+      }
+      .conversion-steps-grid {
+        grid-template-columns: 1fr;
+      }
+      .action-buttons {
+        flex-direction: column;
+      }
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
 
   <!-- ============================================================
        TEMOIGNAGES & FORMULAIRE
@@ -877,6 +1248,288 @@
       </div>
     </div>
   </section>
+
+
+  <!-- ============================================================
+       RESEAUX SOCIAUX & APPLICATION MOBILE
+  ============================================================ -->
+  <section id="social-mobile" class="section-social-mobile">
+    <div class="container">
+      <div class="social-mobile-grid">
+        
+        <!-- Section Réseaux Sociaux -->
+        <div class="social-content fade-in">
+          <span class="section-tag">Restez Connectés</span>
+          <h2 class="section-title">Rejoignez-nous sur les Réseaux</h2>
+          <p class="section-subtitle">Suivez nos moments forts, recevez des paroles d'édification et partagez la bonne nouvelle avec nous.</p>
+          
+          <div class="social-platforms">
+            <a href="https://facebook.com" target="_blank" class="social-platform-card facebook">
+              <div class="social-platform-icon"><i class="fa-brands fa-facebook-f"></i></div>
+              <div class="social-platform-info">
+                <span class="platform-name">Facebook</span>
+                <span class="platform-action">Nous suivre</span>
+              </div>
+            </a>
+            
+            <a href="https://tiktok.com" target="_blank" class="social-platform-card tiktok">
+              <div class="social-platform-icon"><i class="fa-brands fa-tiktok"></i></div>
+              <div class="social-platform-info">
+                <span class="platform-name">TikTok</span>
+                <span class="platform-action">Nos vidéos</span>
+              </div>
+            </a>
+            
+            <a href="https://wa.me/22670000000" target="_blank" class="social-platform-card whatsapp">
+              <div class="social-platform-icon"><i class="fa-brands fa-whatsapp"></i></div>
+              <div class="social-platform-info">
+                <span class="platform-name">WhatsApp</span>
+                <span class="platform-action">Discuter</span>
+              </div>
+            </a>
+
+            <a href="https://youtube.com" target="_blank" class="social-platform-card youtube">
+              <div class="social-platform-icon"><i class="fa-brands fa-youtube"></i></div>
+              <div class="social-platform-info">
+                <span class="platform-name">YouTube</span>
+                <span class="platform-action">S'abonner</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Section Application Mobile -->
+        <div class="mobile-app-content fade-in fade-in-delay-1">
+          <div class="phone-mockup">
+            <div class="phone-frame">
+              <img src="{% static 'image/img1.jpg' %}" alt="App Preview" class="phone-screen">
+            </div>
+          </div>
+          <div class="mobile-app-text">
+            <span class="section-tag">Application Mobile</span>
+            <h2 class="section-title">L'Église dans votre poche</h2>
+            <p>Emportez la Parole partout avec vous. Accédez aux prédications, recevez les notifications en temps réel et suivez le programme hebdo directement sur votre mobile.</p>
+            
+            <div class="app-download-buttons">
+              <a href="#" class="btn-app-store">
+                <i class="fa-brands fa-apple"></i>
+                <div class="btn-text">
+                  <span>Disponible sur</span>
+                  <strong>App Store</strong>
+                </div>
+              </a>
+              <a href="#" class="btn-google-play">
+                <i class="fa-brands fa-google-play"></i>
+                <div class="btn-text">
+                  <span>Disponible sur</span>
+                  <strong>Google Play</strong>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <style>
+    /* === SECTION SOCIAL & MOBILE APP === */
+    .section-social-mobile {
+      padding: 100px 0;
+      background: #fdfdfd;
+    }
+
+    .social-mobile-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1.8fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .social-platforms {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .social-platform-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+
+    .social-platform-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      border-color: var(--accent-yellow);
+    }
+
+    .social-platform-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: #fff;
+    }
+
+    .facebook .social-platform-icon { background: #1877F2; }
+    .tiktok .social-platform-icon { background: #000000; }
+    .whatsapp .social-platform-icon { background: #25D366; }
+    .youtube .social-platform-icon { background: #FF0000; }
+
+    .platform-name {
+      display: block;
+      font-weight: 700;
+      color: var(--primary-blue);
+      font-size: 0.95rem;
+    }
+
+    .platform-action {
+      font-size: 0.75rem;
+      color: #666;
+    }
+
+    /* Phone Mockup */
+    .mobile-app-content {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      background: var(--primary-blue);
+      padding: 40px;
+      border-radius: 30px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mobile-app-content::after {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 300px;
+      height: 300px;
+      background: rgba(255,215,0,0.1);
+      border-radius: 50%;
+    }
+
+    .phone-mockup {
+      flex-shrink: 0;
+      width: 200px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .phone-frame {
+      width: 100%;
+      height: 400px;
+      background: #333;
+      border: 8px solid #222;
+      border-radius: 36px;
+      overflow: hidden;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .mobile-app-text {
+      position: relative;
+      z-index: 2;
+    }
+
+    .mobile-app-text .section-title {
+      color: var(--accent-yellow);
+      margin-bottom: 20px;
+    }
+
+    .mobile-app-text p {
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 30px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .app-download-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-app-store, .btn-google-play {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #000;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: all 0.3s ease;
+    }
+
+    .btn-app-store:hover, .btn-google-play:hover {
+      background: #222;
+      border-color: var(--accent-yellow);
+      transform: scale(1.05);
+    }
+
+    .btn-app-store i, .btn-google-play i {
+      font-size: 1.8rem;
+    }
+
+    .btn-text span {
+      display: block;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    .btn-text strong {
+      display: block;
+      font-size: 1rem;
+    }
+
+    @media (max-width: 1024px) {
+      .social-mobile-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .mobile-app-content {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .mobile-app-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      .phone-mockup {
+        width: 160px;
+      }
+      .app-download-buttons {
+        justify-content: center;
+      }
+      .social-platforms {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 
   <script>
     // Liste des versets pour rotation quotidienne

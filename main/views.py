@@ -10,17 +10,18 @@ from .models import *
 
 
 def index(request):
-    events =Evenement.objects.all()
+    events = Evenement.objects.all()
     #filtrer les 3 dernier predications
-    predication =Predication.objects.filter().order_by('-created_at')[:3]
-    temoignages =Temoignages.objects.filter(published=True).order_by('-created_at')[:3]
-    context ={
-        'events':events,
-        'predications':predication,
-        'temoignages':temoignages
+    predications = Predication.objects.filter().order_by('-created_at')[:3]
+    temoignages = Temoignages.objects.filter(published=True).order_by('-created_at')[:3]
+    programme_hebdo = ProgrammeHebdo.objects.all()
+    context = {
+        'events': events,
+        'predications': predications,
+        'temoignages': temoignages,
+        'programme_hebdo': programme_hebdo
     }
-
-    return render(request,"main/index_2.html",context)
+    return render(request, "main/index_2.html", context)
 
 def predications_list(request):
     predications = Predication.objects.all().order_by('-date')[:20]

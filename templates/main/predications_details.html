@@ -112,10 +112,17 @@
           <div class="audio-container">
     <p><strong><i class="fa-solid fa-headphones"></i> Prédication :</strong> {{ pre_detail.titre }}</p>
     
+
+    
+    {% if pre_detail.audio %}
+      
+
+      
     <audio id="player" controls controlsList="nodownload" oncontextmenu="return false;">
         <source src="{{ pre_detail.audio.url }}" type="audio/mpeg">
         Votre navigateur ne supporte pas la lecture audio.
     </audio>
+        {% endif %}
 </div>
          
            <a class="btn-listen" href ="/"><i class="fa-solid fa-play"></i>Regarder la video</a>

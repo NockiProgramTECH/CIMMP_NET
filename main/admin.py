@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 
 from django.contrib import admin
-from .models import Predication, Evenement,Temoignages
+from .models import Predication, Evenement, ProgrammeHebdo,Temoignages
 
 admin.site.register(Predication)
 # @admin.register(Predication)
@@ -43,13 +43,10 @@ class TemoignagesAdmin(admin.ModelAdmin):
     list_display = ['id','first_name', 'last_name']
     search_fields = ['first_name','last_name']
     list_per_page = 25
-   
-    # fieldsets = (
-    #     (None, {
-    #         'fields': ('name', 'description')
-    #     }),
-    #     ('Advanced options', {
-    #         'classes': ('collapse',),
-    #         'fields': ('is_active', 'metadata'),
-    #     }),
-    # )
+
+@admin.register(ProgrammeHebdo)
+class ProgrammeHebdoAdmin(admin.ModelAdmin):
+    list_display = ['jour', 'horaire', 'activite', 'salle', 'responsable']
+    list_filter = ['jour', 'badge_special']
+    ordering = ['ordre']
+    list_per_page = 25

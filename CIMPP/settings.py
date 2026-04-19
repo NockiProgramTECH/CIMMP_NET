@@ -45,8 +45,8 @@ INSTALLED_APPS = [
     'api',
 ]
 
-if DEBUG:
-    INSTALLED_APPS += ["django_browser_reload"]
+# if DEBUG:
+#     INSTALLED_APPS += ["django_browser_reload"]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -60,8 +60,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-if DEBUG:
-    MIDDLEWARE += ["django_browser_reload.middleware.BrowserReloadMiddleware"]
+# if DEBUG:
+    # MIDDLEWARE += ["django_browser_reload.middleware.BrowserReloadMiddleware"]
 
 ROOT_URLCONF = 'CIMPP.urls'
 

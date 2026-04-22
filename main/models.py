@@ -51,6 +51,8 @@ class Predication(models.Model):
 
     # Properties
 
+def getImage(instance,filename):
+    return f"{instance}"
 class Evenement(models.Model):
     """Models pour les evenements"""
     

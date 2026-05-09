@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'api',
+    'drf_spectacular',
 ]
 
 # if DEBUG:
@@ -132,6 +133,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME':     os.getenv('DB_NAME'),
+        #CIMPP_DB
         'USER':     os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST':     os.getenv('DB_HOST'),
@@ -183,7 +185,16 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'CIMPP API',
+    'DESCRIPTION': 'Documentation interactive de l\'API du Centre International de Mission Prophétique et de la Parole (CIMPP).',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # Autres configurations si besoin
 }
 
 # Simple JWT configuration

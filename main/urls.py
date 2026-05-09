@@ -10,6 +10,8 @@ urlpatterns = [
     path('submit-temoignage/', views.submit_temoignage, name='submit_temoignage'),
     path('predications/', views.predications_list, name='predications_list'),
     path('predications/<str:slug>/', views.predication_detail, name='predication_detail'),
+     path('live-stream/<int:pk>/', views.live_stream_detail, name='live_stream_detail'),
+
 
 
 ]

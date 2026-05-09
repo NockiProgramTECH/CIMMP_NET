@@ -4,6 +4,7 @@ from rest_framework import viewsets, permissions, status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from api.models import RendezVous
 from main.models import Evenement, Predication, Temoignages, ProgrammeHebdo, LiveStream
 from .serializers import (
     EvenementSerializer, 
@@ -11,7 +12,8 @@ from .serializers import (
     TemoignagesSerializer, 
     UserRegisterSerializer,
     ProgrammeHebdoSerializer,
-    LiveStreamSerializer
+    LiveStreamSerializer,
+    RendezVousSerializer
 )
 
 class RegisterUserView(generics.CreateAPIView):
@@ -109,6 +111,55 @@ class TemoignagesViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return Temoignages.objects.filter(published=True).order_by('-created_at')
         return Temoignages.objects.all()
+
+class RendezVousViewSet(viewsets.ModelViewSet):
+    """
+    Gestion des demandes de rendez-vous.
+    - POST (create) : Reservé aux utilisateurs connectés.
+    - GET (list/retrieve) : Reservé aux administrateurs.
+    """
+    queryset = RendezVous.objects.all()
+    serializer_class = RendezVousSerializer
+
+    def get_permissions(self):
+        """
+        Définit les permissions selon l'action.
+        """
+        if self.action == 'create':
+            return [permissions.IsAuthenticated()]
+        return [permissions.IsAdminUser()]
+
+    def perform_create(self, serializer):
+        """
+        Associe automatiquement le rendez-vous à l'utilisateur connecté.
+        """
+        serializer.save(user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        """
+        Surcharge de la création pour retourner un message personnalisé.
+        """
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            return Response(
+                {
+                    "message": "Votre demande de rendez-vous a été bien reçue et est en attente de confirmation.",
+                    "data": serializer.data,
+                },
+                status=status.HTTP_201_CREATED
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_queryset(self):
+        """
+        Seuls les administrateurs voient la liste complète, triée par date de création.
+        """
+        if self.request.user.is_staff:
+            return RendezVous.objects.all().order_by('-created_at')
+        return RendezVous.objects.none()
+
+
 
 
 class ProgrammeHebdoViewSet(viewsets.ModelViewSet):

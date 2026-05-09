@@ -265,32 +265,51 @@
         {% endfor %}
       </div>
 
+
+
+
+
       <div class="live-section fade-in">
-        <div class="live-header">
-          <h3 class="live-title">
-            <i class="fa-brands fa-youtube" style="color:var(--detail-red);"></i> Directs &amp; Replays des Cultes
-          </h3>
-          <div class="live-badge">
-            <i class="fa-solid fa-circle" style="font-size:0.5rem;"></i> EN DIRECT
+        {% if livestreams %}
+          <div class="live-header">
+            <h3 class="live-title">
+              <i class="fa-brands fa-{% if livestreams.platform == 'youtube' %}youtube{% else %}facebook{% endif %}" style="color:var(--detail-red);"></i> {{ livestreams.titre }}
+            </h3>
+            <div class="live-badge">
+              <i class="fa-solid fa-circle" style="font-size:0.5rem;"></i> EN DIRECT
+            </div>
           </div>
-        </div>
-        <div class="iframe-wrapper">
-          <div onclick="openVideo()">
-            <img src="https://img.youtube.com/vi/-QBVApZLGp4/0.jpg" width="100%">
+          
+          <div class="iframe-wrapper">
+            <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+              <iframe 
+                  src="{{ livestreams.get_embed_url }}" 
+                  title="{{ livestreams.titre }}"
+                  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:none; overflow:hidden;" 
+                  frameborder="0" 
+                  scrolling="no"
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" 
+                  referrerpolicy="no-referrer-when-downgrade"
+                  allowfullscreen>
+              </iframe>
+            </div>
           </div>
-          <div id="videoModal" style="display:none;">
-            <iframe width="750" height="315" src="https://www.youtube-nocookie.com/embed/-QBVApZLGp4?si=_ZDD7_ovsHPB-paF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          
+          <p class="live-note">
+            <i class="fa-solid fa-circle-info"></i>
+            Nous sommes actuellement en direct sur {{ livestreams.get_platform_display }}. Rejoignez-nous pour ce moment de grâce.
+          </p>
+        {% else %}
+          <div class="live-header">
+            <h3 class="live-title">
+              <i class="fa-solid fa-video-slash" style="color:var(--primary-blue);"></i> Directs &amp; Replays
+            </h3>
           </div>
-          <script>
-            function openVideo() {
-              document.getElementById("videoModal").style.display = "block";
-            }
-          </script>
-        </div>
-        <p class="live-note">
-          <i class="fa-solid fa-circle-info"></i>
-          Rejoignez-nous en direct chaque dimanche à 09h00 (GMT+0). Abonnez-vous pour ne manquer aucun message.
-        </p>
+          <div class="live-offline-placeholder" style="padding: 40px; background: var(--blue-light); border-radius: 15px; text-align: center; border: 2px dashed var(--primary-blue);">
+            <p style="color: var(--primary-blue); font-weight: 600; margin: 0;">Aucun direct en cours pour le moment.</p>
+            <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">Rejoignez-nous chaque dimanche à partir de 09h00 (GMT+0).</p>
+          </div>
+        {% endif %}
       </div>
     </div>
   </section>
@@ -751,79 +770,117 @@
       <span class="section-tag">Moments de Grâce</span>
       <h2 class="section-title" id="galerie-title">Galerie Photos</h2>
       <p class="section-subtitle">Des instants précieux de louange, de prière et de communion fraternelle.</p>
-      <div class="galerie-carousel">
-        <div class="galerie-scroll">
-          <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&q=80" alt="Culte principal" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
-          <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1526510747491-58f928ec870f?w=400&q=80" alt="Prière collective" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
-          <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1485872299829-c673f5194813?w=400&q=80" alt="Louange" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
-          <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=400&q=80" alt="Baptême" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
-          <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1445633629932-0029acc44e88?w=400&q=80" alt="Conférence" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
-          <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80" alt="Jeunesse" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
-          <!-- Duplicate for infinite scroll -->
-          <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&q=80" alt="Culte principal" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
-          <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1526510747491-58f928ec870f?w=400&q=80" alt="Prière collective" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
-          <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1485872299829-c673f5194813?w=400&q=80" alt="Louange" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
-          <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=400&q=80" alt="Baptême" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
-          <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1445633629932-0029acc44e88?w=400&q=80" alt="Conférence" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
-          <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80" alt="Jeunesse" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+      
+      <div class="galerie-grid-fixed fade-in">
+        {% for image in gallery_images %}
+        <div class="galerie-item-fixed {% if forloop.first %}large{% endif %}">
+          <img src="{{ image.image.url }}" alt="{{ image.title }}" loading="lazy" />
+          <div class="galerie-item-overlay">
+            <i class="fa-solid fa-magnifying-glass-plus"></i>
+            {% if image.title %}
+            <span class="galerie-item-caption">{{ image.title }}</span>
+            {% endif %}
+          </div>
         </div>
+        {% empty %}
+        <p class="text-center text-muted">La galerie est en cours de mise à jour.</p>
+        {% endfor %}
       </div>
     </div>
   </section>
 
   <style>
-    .galerie-carousel {
-      overflow: hidden;
-      position: relative;
-      width: 100%;
+    /* === NOUVEAU VISUEL GALERIE (GRID 7 PHOTOS) === */
+    .galerie-grid-fixed {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 200px;
+      gap: 15px;
+      margin-top: 30px;
     }
 
-    .galerie-scroll {
-      display: flex;
-      gap: 1rem;
-      animation: scrollRightToLeft 20s linear infinite;
-    }
-
-    @keyframes scrollRightToLeft {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(-50%);
-      }
-    }
-
-    .galerie-item {
-      flex-shrink: 0;
-      width: 300px; /* Adjust width as needed */
+    .galerie-item-fixed {
       position: relative;
       overflow: hidden;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      cursor: pointer;
     }
 
-    .galerie-item img {
+    .galerie-item-fixed img {
       width: 100%;
-      height: 200px;
+      height: 100%;
       object-fit: cover;
-      display: block;
+      transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .galerie-item-fixed:hover img {
+      transform: scale(1.1);
+    }
+
+    .galerie-item-fixed.large {
+      grid-column: span 2;
+      grid-row: span 2;
     }
 
     .galerie-item-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,0.4);
+      background: linear-gradient(to top, rgba(0, 51, 102, 0.8), transparent);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       opacity: 0;
-      transition: opacity 0.3s;
+      transition: all 0.3s ease;
       color: #fff;
-      font-size: 1.5rem;
     }
 
-    .galerie-item:hover .galerie-item-overlay {
+    .galerie-item-fixed:hover .galerie-item-overlay {
       opacity: 1;
+    }
+
+    .galerie-item-overlay i {
+      font-size: 2rem;
+      color: var(--accent-yellow);
+      margin-bottom: 10px;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .galerie-item-fixed:hover .galerie-item-overlay i {
+      transform: translateY(0);
+    }
+
+    .galerie-item-caption {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+      padding: 0 15px;
+    }
+
+    @media (max-width: 992px) {
+      .galerie-grid-fixed {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .galerie-grid-fixed {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 180px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .galerie-grid-fixed {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 250px;
+      }
+      .galerie-item-fixed.large {
+        grid-column: span 1;
+        grid-row: span 1;
+      }
     }
   </style>
 
@@ -885,6 +942,7 @@
       </div>
     </div>
   </section>
+  
 
   <style>
     /* === SECTION CONVERSION / NOUVELLE VIE === */

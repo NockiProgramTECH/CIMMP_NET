@@ -15,11 +15,16 @@ def index(request):
     predications = Predication.objects.filter().order_by('-created_at')[:3]
     temoignages = Temoignages.objects.filter(published=True).order_by('-created_at')[:3]
     programme_hebdo = ProgrammeHebdo.objects.all()
+    livestreams = LiveStream.objects.filter(is_live=True).order_by('-updated_at')[:1]
+    gallery_images = Gallery.objects.all().order_by('-created_at')[:7]
+
     context = {
         'events': events,
         'predications': predications,
         'temoignages': temoignages,
-        'programme_hebdo': programme_hebdo
+        'programme_hebdo': programme_hebdo,
+        'livestreams': livestreams.first(),  # On prend le premier livestream actif
+        'gallery_images': gallery_images
     }
     return render(request, "main/index_2.html", context)
 
@@ -84,6 +89,11 @@ def submit_temoignage(request):
         return JsonResponse({'success': False, 'error': f'Erreur serveur: {str(e)}'}, status=500)
 
 
+
+
+def live_stream_detail(request, pk):
+   livestream = get_object_or_404(LiveStream, pk=pk)
+   return render(request, 'live_stream_detail.html', {'livestream': livestream})
 
 
 

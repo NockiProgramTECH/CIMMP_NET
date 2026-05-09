@@ -12,7 +12,8 @@ from .views import (
     RegisterUserView,
     UserProfileView,
     ProgrammeHebdoViewSet,
-    LiveStreamViewSet
+    LiveStreamViewSet,
+    RendezVousViewSet
 )
 
 # Routeur pour les ModelViewSets standards
@@ -21,12 +22,22 @@ router.register(r'evenements', EvenementViewSet)
 router.register(r'predications', PredicationViewSet)
 router.register(r'temoignages', TemoignagesViewSet)
 router.register(r'programmes-hebdo', ProgrammeHebdoViewSet)
+router.register(r'rdv',RendezVousViewSet)
 router.register(r'live', LiveStreamViewSet, basename='live')
+
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 urlpatterns = [
     # Routes du routeur (CRUD Evenements, Predications, Temoignages)
     path('', include(router.urls)),
     
+    # --- Documentation API (OpenAPI/Swagger) ---
+    path('schema/', SpectacularAPIView.as_view(), name='schema'),
+    # UI pour Swagger
+    path('docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    # UI pour Redoc (alternative)
+    path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+
     # --- Authentification et Comptes ---
     
     # Inscription d'un nouvel utilisateur

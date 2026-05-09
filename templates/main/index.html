@@ -447,12 +447,16 @@ document.addEventListener('DOMContentLoaded', function() {
       <h2 class="section-title" id="galerie-title">Galerie Photos</h2>
       <p class="section-subtitle">Des instants précieux de louange, de prière et de communion fraternelle.</p>
       <div class="galerie-grid">
-        <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&q=80" alt="Culte principal" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
-        <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1526510747491-58f928ec870f?w=400&q=80" alt="Prière collective" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
-        <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1485872299829-c673f5194813?w=400&q=80" alt="Louange" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
-        <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=400&q=80" alt="Baptême" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
-        <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1445633629932-0029acc44e88?w=400&q=80" alt="Conférence" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
-        <div class="galerie-item fade-in"><img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80" alt="Jeunesse" loading="lazy" /><div class="galerie-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+        {% for image in gallery_images %}
+        <div class="galerie-item fade-in">
+          <img src="{{ image.image.url }}" alt="{{ image.title }}" loading="lazy" />
+          <div class="galerie-item-overlay">
+            <i class="fa-solid fa-magnifying-glass-plus"></i>
+          </div>
+        </div>
+        {% empty %}
+        <p class="text-center text-muted">La galerie est en cours de mise à jour.</p>
+        {% endfor %}
       </div>
     </div>
   </section>

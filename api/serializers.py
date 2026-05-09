@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from main.models import Evenement, Predication, Temoignages, ProgrammeHebdo, LiveStream
+from .models import RendezVous
+
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     """
@@ -84,3 +86,15 @@ class LiveStreamSerializer(serializers.ModelSerializer):
     class Meta:
         model = LiveStream
         fields = '__all__'
+
+
+
+class RendezVousSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+    created_at = serializers.ReadOnlyField()
+
+    class Meta:
+        model = RendezVous
+        fields = ['id', 'user', 'date_rdv', 'message', 'status', 'created_at']
+        read_only_fields = ['status', 'created_at']
+

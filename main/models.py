@@ -76,10 +76,15 @@ class Predication(models.Model, VideoMixin):
     slug = models.SlugField(unique=True)
     date = models.DateTimeField()
     url_video =models.URLField(blank=True, help_text="URL de la vidéo YouTube ou Facebook")
-    
+    # CHAMP POUR MINIO
+    video_file = models.FileField(upload_to='videos/', blank=True, null=True)
+
     @property
     def url(self):
-        return self.url_video
+        if self.video_file:
+            # Si on a un fichier uploadé, on utilise le storage configuré
+            return self.video_file.url
+        return self.url_video # Sinon on garde l'ancienne méthode (YouTube/FB)
     audio =models.FileField(upload_to="audio",blank=True,null=True)
     resume = models.TextField(blank=True)
     verset_principal = models.CharField(max_length=100, blank=True)

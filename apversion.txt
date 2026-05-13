@@ -1,0 +1,84 @@
+from django.db import models
+
+class AppVersion(models.Model):
+    version = models.CharField(max_length=20, help_text="Ex: 1.0.1")
+    apk_file = models.FileField(upload_to='apks/updates/', blank=True, null=True, help_text="Le fichier APK de l'application (optionnel si URL externe fournie)")
+    external_url = models.URLField(blank=True, null=True, help_text="URL externe vers le fichier APK (Cloud, etc.)")
+    release_notes = models.TextField(blank=True, null=True, help_text="Les nouveautés de cette mise à jour")
+    force_update = models.BooleanField(default=False, help_text="Cocher pour obliger l'utilisateur à mettre à jour")
+    is_active = models.BooleanField(default=True, help_text="Est-ce la version actuellement déployée ?")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Version de l'application"
+        verbose_name_plural = "Versions de l'application"
+
+    def __str__(self):
+        return f"Version {self.version}"
+
+    def save(self, *args, **kwargs):
+        # Si on active cette version, on désactive toutes les autres pour n'avoir qu'une seule version active
+        if self.is_active:
+            AppVersion.objects.filter(is_active=True).update(is_active=False)
+        super(AppVersion, self).save(*args, **kwargs)
+
+
+
+
+
+
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import AppVersion
+
+class AppVersionAPIView(APIView):
+    # Pas besoin d'authentification pour vérifier la version
+    permission_classes = [] 
+
+    def get(self, request, *args, **kwargs):
+        # On récupère la version active la plus récente
+        latest_version = AppVersion.objects.filter(is_active=True).order_by('-created_at').first()
+        
+        if latest_version:
+            apk_url = None
+            if latest_version.external_url:
+                apk_url = latest_version.external_url
+            elif latest_version.apk_file:
+                # build_absolute_uri génère l'URL complet : https://tonsite.com/media/apks/updates/app.apk
+                apk_url = request.build_absolute_uri(latest_version.apk_file.url)
+            
+            if apk_url:
+                return Response({
+                    "version": latest_version.version,
+                    "url": apk_url,
+                    "force_update": latest_version.force_update
+                })
+            
+        return Response({"detail": "Aucune mise à jour disponible."}, status=404)
+
+
+
+
+from django.urls import path
+from .views import AppVersionAPIView
+
+urlpatterns = [
+    # ... tes autres routes ...
+    path('version-app/', AppVersionAPIView.as_view(), name='version-app'),
+]
+
+
+
+
+
+from django.contrib import admin
+from .models import AppVersion
+
+@admin.register(AppVersion)
+class AppVersionAdmin(admin.ModelAdmin):
+    list_display = ('version', 'is_active', 'force_update', 'created_at')
+    list_filter = ('is_active', 'force_update')
+    search_fields = ('version',)

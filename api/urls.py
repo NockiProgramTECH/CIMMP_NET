@@ -13,7 +13,10 @@ from .views import (
     UserProfileView,
     ProgrammeHebdoViewSet,
     LiveStreamViewSet,
-    RendezVousViewSet
+    RendezVousViewSet,
+    AppVersionAPIView,
+    ForgotPasswordView,
+    ResetPasswordView
 )
 
 # Routeur pour les ModelViewSets standards
@@ -51,4 +54,11 @@ urlpatterns = [
     
     # Profil utilisateur connecté
     path('auth/profile/', UserProfileView.as_view(), name='user_profile'),
+
+    # Version de l'application
+    path('version-app/', AppVersionAPIView.as_view(), name='version-app'),
+
+    # --- Réinitialisation de mot de passe ---
+    path('auth/forgot-password/', ForgotPasswordView.as_view(), name='forgot_password'),
+    path('auth/reset-password/', ResetPasswordView.as_view(), name='reset_password'),
 ]

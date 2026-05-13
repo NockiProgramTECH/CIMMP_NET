@@ -98,3 +98,13 @@ class RendezVousSerializer(serializers.ModelSerializer):
         fields = ['id', 'user','first_name','last_name', 'date_rdv', 'message', 'status', 'created_at']
         read_only_fields = ['status', 'created_at']
 
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    phone = serializers.CharField(help_text="Le numéro de téléphone (username) de l'utilisateur")
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    phone = serializers.CharField(help_text="Le numéro de téléphone (username) de l'utilisateur")
+    token = serializers.CharField(help_text="Le jeton reçu pour la réinitialisation")
+    new_password = serializers.CharField(min_length=6, write_only=True, help_text="Le nouveau mot de passe")
+

@@ -3,8 +3,9 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets, permissions, status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.contrib.auth.tokens import default_token_generator
 
-from api.models import RendezVous
+from api.models import RendezVous, AppVersion
 from main.models import Evenement, Predication, Temoignages, ProgrammeHebdo, LiveStream
 from .serializers import (
     EvenementSerializer, 
@@ -13,7 +14,9 @@ from .serializers import (
     UserRegisterSerializer,
     ProgrammeHebdoSerializer,
     LiveStreamSerializer,
-    RendezVousSerializer
+    RendezVousSerializer,
+    ForgotPasswordSerializer,
+    ResetPasswordSerializer
 )
 
 class RegisterUserView(generics.CreateAPIView):
@@ -193,3 +196,82 @@ class LiveStreamViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(last_live)
             return Response(serializer.data)
         return Response({"message": "Aucun direct configuré"}, status=status.HTTP_404_NOT_FOUND)
+
+class AppVersionAPIView(APIView):
+    """
+    Vue pour vérifier la dernière version de l'application.
+    Priorise l'URL externe si elle est définie.
+    """
+    permission_classes = [] 
+
+    def get(self, request, *args, **kwargs):
+        latest_version = AppVersion.objects.filter(is_active=True).order_by('-created_at').first()
+        
+        if latest_version:
+            apk_url = None
+            if latest_version.external_url:
+                apk_url = latest_version.external_url
+            elif latest_version.apk_file:
+                apk_url = request.build_absolute_uri(latest_version.apk_file.url)
+            
+            if apk_url:
+                return Response({
+                    "version": latest_version.version,
+                    "url": apk_url,
+                    "force_update": latest_version.force_update
+                })
+            
+        return Response({"detail": "Aucune mise à jour disponible."}, status=404)
+
+class ForgotPasswordView(APIView):
+    """
+    Demande de réinitialisation de mot de passe via le numéro de téléphone.
+    Génère un jeton qui devra être utilisé pour changer le mot de passe.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = ForgotPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            phone = serializer.validated_data['phone']
+            try:
+                user = User.objects.get(username=phone)
+                # Génération du jeton
+                token = default_token_generator.make_token(user)
+                
+                # Dans une application réelle, on enverrait ce token par SMS.
+                # Ici, pour le test, on le retourne dans la réponse ou on log.
+                return Response({
+                    "message": "Un jeton de réinitialisation a été généré.",
+                    "token": token,  # À retirer en production une fois l'envoi SMS configuré
+                    "phone": phone
+                }, status=status.HTTP_200_OK)
+            except User.DoesNotExist:
+                # Pour des raisons de sécurité, on peut aussi retourner 200 même si l'utilisateur n'existe pas
+                return Response({"error": "Utilisateur non trouvé avec ce numéro."}, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ResetPasswordView(APIView):
+    """
+    Réinitialisation effective du mot de passe en utilisant le jeton.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = ResetPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            phone = serializer.validated_data['phone']
+            token = serializer.validated_data['token']
+            new_password = serializer.validated_data['new_password']
+            
+            try:
+                user = User.objects.get(username=phone)
+                if default_token_generator.check_token(user, token):
+                    user.set_password(new_password)
+                    user.save()
+                    return Response({"message": "Mot de passe réinitialisé avec succès."}, status=status.HTTP_200_OK)
+                else:
+                    return Response({"error": "Jeton invalide ou expiré."}, status=status.HTTP_400_BAD_REQUEST)
+            except User.DoesNotExist:
+                return Response({"error": "Utilisateur non trouvé."}, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

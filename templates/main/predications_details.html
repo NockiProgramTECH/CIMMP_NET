@@ -124,11 +124,19 @@
     {% endif %}
 </div>
          
-           {% if pre_detail.url_video %}
-           <button class="btn-listen" id="btnWatchVideo" data-video-url="{{ pre_detail.url_video }}"><i class="fa-solid fa-play"></i>Regarder la video</button>
-           {% endif %}
-          <button class="btn-partager" id="btnShare"><i class="fa-solid fa-share-nodes"></i> Partager cette Prédication</button>
-        
+         {% if pre_detail.video_file %}
+    <!-- Vidéo uploadée sur Garage -->
+    <video controls controlsList="nodownload" oncontextmenu="return false;" style="width:100%;">
+        <source src="{{ pre_detail.video_file.url }}" type="video/mp4">
+        Votre navigateur ne supporte pas la lecture vidéo.
+    </video>
+
+{% elif pre_detail.url_video %}
+    <!-- Vidéo YouTube/Facebook -->
+    <button class="btn-listen" id="btnWatchVideo" data-video-url="{{ pre_detail.url_video }}">
+        <i class="fa-solid fa-play"></i> Regarder la video
+    </button>
+{% endif %}
         </div>
       </div>
 

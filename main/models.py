@@ -83,7 +83,7 @@ class Predication(models.Model, VideoMixin):
     def url(self):
         if self.video_file:
             # Si on a un fichier uploadé, on utilise le storage configuré
-            return self.video_file.url
+            return self.video_file
         return self.url_video # Sinon on garde l'ancienne méthode (YouTube/FB)
     audio =models.FileField(upload_to="audio",blank=True,null=True)
     resume = models.TextField(blank=True)

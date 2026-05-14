@@ -76,16 +76,26 @@ STORAGES = {
 AWS_QUERYSTRING_AUTH = True
 
 # Paramètres de connexion MinIO
-AWS_ACCESS_KEY_ID = 'minioadmin'
-AWS_SECRET_ACCESS_KEY = 'minioadmin'
+#
+AWS_ACCESS_KEY_ID = 'GK36585bb667d2b9df10a292c8'
+AWS_SECRET_ACCESS_KEY = 'bd07599fd632c59a047487893473fc56772980fa61f0b79d5eda15c0955193df'
 AWS_STORAGE_BUCKET_NAME = 'video' #le bucket name creer 
-AWS_S3_ENDPOINT_URL ='http://192.168.1.75:9000'# L'adresse de ton Lab Windows
+AWS_S3_ENDPOINT_URL ='http://192.168.1.69:3900'# L'adresse de ton Lab Windows
+
+AWS_S3_REGION_NAME = "garage"
+
+AWS_S3_ADDRESSING_STYLE = "path"
+AWS_DEFAULT_ACL = None
+
 
 # Paramètres spécifiques pour éviter les erreurs en local
 AWS_S3_SECURE_URLS = False       # Pas de HTTPS
 AWS_QUERYSTRING_AUTH = False     # Garde les liens simples (sans jetons complexes)
 AWS_S3_FILE_OVERWRITE = False    # Ne pas écraser si le nom est identique
-AWS_S3_CUSTOM_DOMAIN = None      # On utilise l'URL directe du endpoint
+
+AWS_S3_CUSTOM_DOMAIN = '127.0.0.1:8000/media'
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_URL_PROTOCOL = 'http:'
 
 
 # Application definition

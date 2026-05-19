@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = ['*']
 
@@ -58,16 +58,44 @@ CLOUDINARY_STORAGE ={
 # ──────────────────────────────────────────────
 # STOCKAGE DES FICHIERS MEDIA → CLOUDINARY
 # ──────────────────────────────────────────────
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
+# On désactive Cloudinary pour le stockage par défaut
+#DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Nouvelle configuration via django-storages
 STORAGES = {
     "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
     },
     "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+# Force Django à signer chaque lien (contourne le mode Private de MinIO)
+AWS_QUERYSTRING_AUTH = True
+
+# Paramètres de connexion a Garage
+#
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME') #le bucket name creer 
+AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL')# L'adresse de ton Lab Windows
+
+AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
+
+AWS_S3_ADDRESSING_STYLE = "path"
+AWS_DEFAULT_ACL = None
+
+
+# Paramètres spécifiques pour éviter les erreurs en local
+AWS_S3_SECURE_URLS = False       # Pas de HTTPS
+AWS_QUERYSTRING_AUTH = False     # Garde les liens simples (sans jetons complexes)
+AWS_S3_FILE_OVERWRITE = False    # Ne pas écraser si le nom est identique
+
+AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_URL_PROTOCOL = 'http:'
 
 
 # Application definition

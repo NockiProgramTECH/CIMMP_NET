@@ -275,3 +275,46 @@ class ResetPasswordView(APIView):
             except User.DoesNotExist:
                 return Response({"error": "Utilisateur non trouvé."}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+# À ajouter à la fin de api/views.py
+
+from django.http import StreamingHttpResponse, Http404
+from django.conf import settings
+import boto3
+
+def serve_media(request, path):
+    s3 = boto3.client(
+        's3',
+        endpoint_url=settings.AWS_S3_ENDPOINT_URL,  #url du serveur de garage(stockage s3)
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        region_name=settings.AWS_S3_REGION_NAME,
+        config=boto3.session.Config(signature_version='s3v4')
+    )
+    try:
+        obj = s3.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=path)
+        content_type = obj.get('ContentType', 'video/mp4')
+        file_size = obj['ContentLength']
+
+        # Streaming par chunks de 8MB
+        def file_iterator(body, chunk_size=8 * 1024 * 1024):
+            while True:
+                chunk = body.read(chunk_size)
+                if not chunk:
+                    break
+                yield chunk
+
+        response = StreamingHttpResponse(
+            file_iterator(obj['Body']),
+            content_type=content_type
+        )
+        response['Content-Length'] = file_size
+        response['Cache-Control'] = 'public, max-age=86400'
+        response['Accept-Ranges'] = 'bytes'
+        return response
+
+    except Exception:
+        raise Http404

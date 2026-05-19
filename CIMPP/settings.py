@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True #os.getenv('DEBUG', 'False').lower() == 'true'
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = ['*']
 
@@ -75,14 +75,14 @@ STORAGES = {
 # Force Django à signer chaque lien (contourne le mode Private de MinIO)
 AWS_QUERYSTRING_AUTH = True
 
-# Paramètres de connexion MinIO
+# Paramètres de connexion a Garage
 #
-AWS_ACCESS_KEY_ID = 'GK36585bb667d2b9df10a292c8'
-AWS_SECRET_ACCESS_KEY = 'bd07599fd632c59a047487893473fc56772980fa61f0b79d5eda15c0955193df'
-AWS_STORAGE_BUCKET_NAME = 'video' #le bucket name creer 
-AWS_S3_ENDPOINT_URL ='http://192.168.1.69:3900'# L'adresse de ton Lab Windows
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME') #le bucket name creer 
+AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL')# L'adresse de ton Lab Windows
 
-AWS_S3_REGION_NAME = "garage"
+AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
 
 AWS_S3_ADDRESSING_STYLE = "path"
 AWS_DEFAULT_ACL = None
@@ -93,7 +93,7 @@ AWS_S3_SECURE_URLS = False       # Pas de HTTPS
 AWS_QUERYSTRING_AUTH = False     # Garde les liens simples (sans jetons complexes)
 AWS_S3_FILE_OVERWRITE = False    # Ne pas écraser si le nom est identique
 
-AWS_S3_CUSTOM_DOMAIN = '127.0.0.1:8000/media'
+AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_URL_PROTOCOL = 'http:'
 

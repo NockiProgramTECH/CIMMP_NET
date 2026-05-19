@@ -282,19 +282,20 @@ class ResetPasswordView(APIView):
 # À ajouter à la fin de api/views.py
 
 from django.http import StreamingHttpResponse, Http404
+from django.conf import settings
 import boto3
 
 def serve_media(request, path):
     s3 = boto3.client(
         's3',
-        endpoint_url='http://192.168.1.69:3900',
-        aws_access_key_id='GK36585bb667d2b9df10a292c8',
-        aws_secret_access_key='bd07599fd632c59a047487893473fc56772980fa61f0b79d5eda15c0955193df',
-        region_name='garage',
+        endpoint_url=settings.AWS_S3_ENDPOINT_URL,  #url du serveur de garage(stockage s3)
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        region_name=settings.AWS_S3_REGION_NAME,
         config=boto3.session.Config(signature_version='s3v4')
     )
     try:
-        obj = s3.get_object(Bucket='video', Key=path)
+        obj = s3.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=path)
         content_type = obj.get('ContentType', 'video/mp4')
         file_size = obj['ContentLength']
 

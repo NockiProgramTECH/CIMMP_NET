@@ -10,6 +10,40 @@ Cette API utilise le format JSON pour tous les échanges de données, sauf pour 
 
 ## 1. Authentification & Comptes (`/auth/`)
 
+### Demande de code de vérification
+- `POST /auth/request-code/`
+    - **Entrée (JSON)** :
+    ```json
+    {
+        "identifier": "01234567", // Numéro de téléphone ou Email
+        "purpose": "REGISTER" // ou "PASSWORD_RESET"
+    }
+    ```
+    - **Sortie (JSON - 200 OK)** :
+    ```json
+    {
+        "message": "Code de vérification envoyé à 01234567.",
+        "code": "123456" // Uniquement présent en mode test/dev
+    }
+    ```
+
+### Vérification de code
+- `POST /auth/verify-code/`
+    - **Entrée (JSON)** :
+    ```json
+    {
+        "identifier": "01234567",
+        "code": "123456",
+        "purpose": "REGISTER" // ou "PASSWORD_RESET"
+    }
+    ```
+    - **Sortie (JSON - 200 OK)** :
+    ```json
+    {
+        "message": "Code valide."
+    }
+    ```
+
 ### Inscription
 - `POST /auth/register/`
     - **Entrée (JSON)** :
@@ -19,17 +53,62 @@ Cette API utilise le format JSON pour tous les échanges de données, sauf pour 
         "email": "user@example.com",
         "password": "password123",
         "first_name": "Jean",
-        "last_name": "Dupont"
+        "last_name": "Dupont",
+        "code": "123456" // Code de 6 chiffres reçu par email
     }
     ```
     - **Sortie (JSON - 201 Created)** :
     ```json
     {
-        "id": 1,
-        "username": "01234567",
-        "email": "user@example.com",
-        "first_name": "Jean",
-        "last_name": "Dupont"
+        "user": {
+            "id": 1,
+            "username": "01234567",
+            "email": "user@example.com",
+            "first_name": "Jean",
+            "last_name": "Dupont"
+        },
+        "tokens": {
+            "refresh": "eyJhbG...",
+            "access": "eyJhbG..."
+        },
+        "message": "Compte créé et connecté avec succès."
+    }
+    ```
+
+### Réinitialisation de mot de passe (Demande)
+- `POST /auth/forgot-password/`
+    - **Entrée (JSON)** :
+    ```json
+    {
+        "phone": "01234567"
+    }
+    ```
+    - **Sortie (JSON - 200 OK)** :
+    ```json
+    {
+        "message": "Un code de réinitialisation a été envoyé à l'adresse email associée.",
+        "phone": "01234567"
+    }
+    ```
+
+### Réinitialisation de mot de passe (Confirmation)
+- `POST /auth/reset-password/`
+    - **Entrée (JSON)** :
+    ```json
+    {
+        "phone": "01234567",
+        "code": "123456",
+        "new_password": "new_password123"
+    }
+    ```
+    - **Sortie (JSON - 200 OK)** :
+    ```json
+    {
+        "message": "Mot de passe réinitialisé avec succès.",
+        "tokens": {
+            "refresh": "eyJhbG...",
+            "access": "eyJhbG..."
+        }
     }
     ```
 

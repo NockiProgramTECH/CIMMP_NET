@@ -39,6 +39,7 @@ CIMPP est une plateforme web moderne et complète conçue pour gérer les activi
 - **🙏 Témoignages** : Soumission publique de témoignages et modération par les administrateurs.
 - **⏰ Programme Hebdo** : Affichage dynamique des activités régulières de la semaine.
 - **📽️ Live Stream** : Intégration de flux en direct pour les cultes en ligne.
+- **🔢 Vérification par Code** : Système de validation par code à 6 chiffres pour l'inscription et la réinitialisation de mot de passe.
 - **🔐 Authentification Sécurisée** : Système robuste via JWT pour l'accès aux fonctionnalités restreintes.
 - **📱 API RESTful** : Documentation complète sous Swagger/OpenAPI pour l'intégration mobile.
 - **📦 Stockage Hybride** : Support de Cloudinary (production) et Garage S3 (développement local).

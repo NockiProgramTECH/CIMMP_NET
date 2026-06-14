@@ -105,6 +105,17 @@ class ForgotPasswordSerializer(serializers.Serializer):
 
 class ResetPasswordSerializer(serializers.Serializer):
     phone = serializers.CharField(help_text="Le numéro de téléphone (username) de l'utilisateur")
-    token = serializers.CharField(help_text="Le jeton reçu pour la réinitialisation")
+    code = serializers.CharField(max_length=6, help_text="Le code de 6 chiffres reçu")
     new_password = serializers.CharField(min_length=6, write_only=True, help_text="Le nouveau mot de passe")
+
+
+class RequestCodeSerializer(serializers.Serializer):
+    identifier = serializers.CharField(help_text="Téléphone ou Email")
+    purpose = serializers.ChoiceField(choices=[('REGISTER', 'Inscription'), ('PASSWORD_RESET', 'Réinitialisation')])
+
+
+class VerifyCodeSerializer(serializers.Serializer):
+    identifier = serializers.CharField()
+    code = serializers.CharField(max_length=6)
+    purpose = serializers.ChoiceField(choices=[('REGISTER', 'Inscription'), ('PASSWORD_RESET', 'Réinitialisation')])
 

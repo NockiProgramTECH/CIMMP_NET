@@ -60,42 +60,42 @@ CLOUDINARY_STORAGE ={
 # ──────────────────────────────────────────────
 
 # On désactive Cloudinary pour le stockage par défaut
-#DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Nouvelle configuration via django-storages
-STORAGES = {
-    "default": {
-        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
+# STORAGES = {
+#     "default": {
+#         "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+#     },
+#     "staticfiles": {
+#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#     },
+# }
 
-# Force Django à signer chaque lien (contourne le mode Private de MinIO)
-AWS_QUERYSTRING_AUTH = True
+# # Force Django à signer chaque lien (contourne le mode Private de MinIO)
+# AWS_QUERYSTRING_AUTH = True
 
-# Paramètres de connexion a Garage
-#
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME') #le bucket name creer 
-AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL')# L'adresse de ton Lab Windows
+# # Paramètres de connexion a Garage
+# #
+# AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+# AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+# AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME') #le bucket name creer 
+# AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL')# L'adresse de ton Lab Windows
 
-AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
+# AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
 
-AWS_S3_ADDRESSING_STYLE = "path"
-AWS_DEFAULT_ACL = None
+# AWS_S3_ADDRESSING_STYLE = "path"
+# AWS_DEFAULT_ACL = None
 
 
-# Paramètres spécifiques pour éviter les erreurs en local
-AWS_S3_SECURE_URLS = False       # Pas de HTTPS
-AWS_QUERYSTRING_AUTH = False     # Garde les liens simples (sans jetons complexes)
-AWS_S3_FILE_OVERWRITE = False    # Ne pas écraser si le nom est identique
+# # Paramètres spécifiques pour éviter les erreurs en local
+# AWS_S3_SECURE_URLS = False       # Pas de HTTPS
+# AWS_QUERYSTRING_AUTH = False     # Garde les liens simples (sans jetons complexes)
+# AWS_S3_FILE_OVERWRITE = False    # Ne pas écraser si le nom est identique
 
-AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
-AWS_QUERYSTRING_AUTH = False
-AWS_S3_URL_PROTOCOL = 'http:'
+# AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
+# AWS_QUERYSTRING_AUTH = False
+# AWS_S3_URL_PROTOCOL = 'http:'
 
 
 # Application definition
@@ -160,12 +160,12 @@ WSGI_APPLICATION = 'CIMPP.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':     os.getenv('DB_NAME'),
+        'NAME':     os.getenv('DB_NAME',default=' cimppdb '),
         #CIMPP_DB
-        'USER':     os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST':     os.getenv('DB_HOST'),
-        'PORT':     os.getenv('DB_PORT'),
+        'USER':     os.getenv('DB_USER',default='root'),
+        'PASSWORD': os.getenv('DB_PASSWORD',default='root'),
+        'HOST':     os.getenv('DB_HOST',default='127.0.0.1'),
+        'PORT':     os.getenv('DB_PORT',default=3306),
         'CONN_MAX_AGE': 600, # Garde la connexion ouverte 10 minutes
         'OPTIONS': {
             'ssl': {'ca': None},
@@ -237,3 +237,11 @@ SIMPLE_JWT = {
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'lankoandeenock002@gmail.com'
+EMAIL_HOST_PASSWORD = 'gyjqaxhgxhbvhydc' # Use App Password for Gmail

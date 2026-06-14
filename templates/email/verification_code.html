@@ -1,0 +1,14 @@
+{% extends "email/base_email.html" %}
+
+{% block content %}
+    <p>Bonjour,</p>
+    <p>Vous avez demandé un code de vérification pour <strong>{{ purpose }}</strong> sur CIMPP.</p>
+    
+    <div class="code-box">
+        {{ code }}
+    </div>
+    
+    <p>Ce code est valable pendant 10 minutes. Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email.</p>
+    
+    <p>Cordialement,<br>L'équipe CIMPP</p>
+{% endblock %}

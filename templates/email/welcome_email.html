@@ -1,0 +1,12 @@
+{% extends "email/base_email.html" %}
+
+{% block content %}
+    <p>Bonjour {{ user.username }},</p>
+    <p>Bienvenue sur CIMPP ! Nous sommes ravis de vous compter parmi nous.</p>
+    
+    <p>Votre compte a été créé avec succès. Vous pouvez maintenant accéder à toutes nos fonctionnalités.</p>
+    
+    <p>Si vous avez des questions, n'hésitez pas à nous contacter.</p>
+    
+    <p>Cordialement,<br>L'équipe CIMPP</p>
+{% endblock %}

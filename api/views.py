@@ -4,9 +4,13 @@ from rest_framework import viewsets, permissions, status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.conf import settings
+from rest_framework_simplejwt.tokens import RefreshToken
 
-from api.models import RendezVous, AppVersion
-from main.models import Evenement, Predication, Temoignages, ProgrammeHebdo, LiveStream
+from main.models import Evenement, LiveStream, Predication, ProgrammeHebdo, Temoignages
+
+from .models import RendezVous, AppVersion, VerificationCode
 from .serializers import (
     EvenementSerializer, 
     PredicationSerializer, 
@@ -16,17 +20,144 @@ from .serializers import (
     LiveStreamSerializer,
     RendezVousSerializer,
     ForgotPasswordSerializer,
-    ResetPasswordSerializer
+    ResetPasswordSerializer,
+    RequestCodeSerializer,
+    VerifyCodeSerializer
 )
+
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
+
+class RequestCodeView(APIView):
+    """
+    Génère et envoie un code de 6 chiffres par email pour l'inscription ou la réinitialisation.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = RequestCodeSerializer(data=request.data)
+        if serializer.is_valid():
+            identifier = serializer.validated_data['identifier']
+            purpose = serializer.validated_data['purpose']
+            
+            # Destination de l'email
+            email_dest = None
+            
+            if purpose == 'PASSWORD_RESET':
+                # On cherche l'utilisateur par username (tél) ou email
+                user = User.objects.filter(username=identifier).first() or User.objects.filter(email=identifier).first()
+                if not user:
+                    return Response({"error": "Utilisateur non trouvé."}, status=status.HTTP_404_NOT_FOUND)
+                email_dest = user.email
+                if not email_dest:
+                    return Response({"error": "Aucun email associé à ce compte."}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                # Pour l'inscription, l'identifiant doit être l'email
+                if "@" not in identifier:
+                    return Response({"error": "Veuillez fournir un email valide pour l'inscription."}, status=status.HTTP_400_BAD_REQUEST)
+                email_dest = identifier
+
+            # Génération du code
+            code = VerificationCode.generate_code()
+            VerificationCode.objects.create(
+                identifier=identifier,
+                code=code,
+                purpose=purpose
+            )
+            
+            # Envoi de l'email
+            subject = "Votre code de vérification CIMPP"
+            message = f"Votre code de vérification pour {purpose} est : {code}. Il expire dans 10 minutes."
+            try:
+                send_mail(
+                    subject,
+                    message,
+                    settings.EMAIL_HOST_USER,
+                    [email_dest],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                return Response({"error": f"Erreur lors de l'envoi de l'email: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            return Response({
+                "message": f"Code de vérification envoyé à {email_dest}.",
+                # "code": code # RETIRÉ POUR LA PRODUCTION
+            }, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class VerifyCodeView(APIView):
+    """
+    Vérifie si le code de 6 chiffres est valide.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = VerifyCodeSerializer(data=request.data)
+        if serializer.is_valid():
+            identifier = serializer.validated_data['identifier']
+            code = serializer.validated_data['code']
+            purpose = serializer.validated_data['purpose']
+            
+            verification = VerificationCode.objects.filter(
+                identifier=identifier,
+                code=code,
+                purpose=purpose,
+                is_used=False
+            ).last()
+            
+            if verification and not verification.is_expired():
+                return Response({"message": "Code valide."}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "Code invalide ou expiré."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class RegisterUserView(generics.CreateAPIView):
     """
-    Vue pour l'enregistrement d'un nouvel utilisateur (Inscription).
-    Permet de créer un compte avec email et téléphone (stocké dans 'username').
+    Vue pour l'enregistrement d'un nouvel utilisateur.
+    Vérifie également le code de validation et connecte l'utilisateur.
     """
     queryset = User.objects.all()
     serializer_class = UserRegisterSerializer
     permission_classes = [permissions.AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        code = request.data.get('code')
+        email = request.data.get('email')
+        
+        if not code or not email:
+            return Response({"error": "L'email et le code de vérification sont requis."}, status=status.HTTP_400_BAD_REQUEST)
+            
+        verification = VerificationCode.objects.filter(
+            identifier=email,
+            code=code,
+            purpose='REGISTER',
+            is_used=False
+        ).last()
+        
+        if not verification or verification.is_expired():
+            return Response({"error": "Code de vérification invalide ou expiré."}, status=status.HTTP_400_BAD_REQUEST)
+            
+        # Création de l'utilisateur
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        
+        # Marquage du code comme utilisé
+        verification.is_used = True
+        verification.save()
+        
+        # Connexion automatique (Génération des tokens)
+        tokens = get_tokens_for_user(user)
+        
+        return Response({
+            "user": serializer.data,
+            "tokens": tokens,
+            "message": "Compte créé et connecté avec succès."
+        }, status=status.HTTP_201_CREATED)
 
 class UserProfileView(APIView):
     """
@@ -225,8 +356,8 @@ class AppVersionAPIView(APIView):
 
 class ForgotPasswordView(APIView):
     """
-    Demande de réinitialisation de mot de passe via le numéro de téléphone.
-    Génère un jeton qui devra être utilisé pour changer le mot de passe.
+    Demande de réinitialisation de mot de passe.
+    Génère un code de 6 chiffres et l'envoie par email.
     """
     permission_classes = [permissions.AllowAny]
 
@@ -235,25 +366,45 @@ class ForgotPasswordView(APIView):
         if serializer.is_valid():
             phone = serializer.validated_data['phone']
             try:
+                # On cherche l'utilisateur (le username est le téléphone dans ce projet)
                 user = User.objects.get(username=phone)
-                # Génération du jeton
-                token = default_token_generator.make_token(user)
+                email_dest = user.email
                 
-                # Dans une application réelle, on enverrait ce token par SMS.
-                # Ici, pour le test, on le retourne dans la réponse ou on log.
+                if not email_dest:
+                    return Response({"error": "Aucun email associé à ce compte pour l'envoi du code."}, status=status.HTTP_400_BAD_REQUEST)
+                
+                # Génération du code
+                code = VerificationCode.generate_code()
+                VerificationCode.objects.create(
+                    identifier=phone,
+                    code=code,
+                    purpose='PASSWORD_RESET'
+                )
+                
+                # Envoi de l'email
+                subject = "Réinitialisation de votre mot de passe CIMPP"
+                message = f"Votre code de réinitialisation est : {code}. Il expire dans 10 minutes."
+                send_mail(
+                    subject,
+                    message,
+                    settings.EMAIL_HOST_USER,
+                    [email_dest],
+                    fail_silently=False,
+                )
+                
                 return Response({
-                    "message": "Un jeton de réinitialisation a été généré.",
-                    "token": token,  # À retirer en production une fois l'envoi SMS configuré
+                    "message": f"Un code de réinitialisation a été envoyé à {email_dest}.",
                     "phone": phone
                 }, status=status.HTTP_200_OK)
             except User.DoesNotExist:
-                # Pour des raisons de sécurité, on peut aussi retourner 200 même si l'utilisateur n'existe pas
                 return Response({"error": "Utilisateur non trouvé avec ce numéro."}, status=status.HTTP_404_NOT_FOUND)
+            except Exception as e:
+                return Response({"error": f"Erreur d'envoi d'email: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ResetPasswordView(APIView):
     """
-    Réinitialisation effective du mot de passe en utilisant le jeton.
+    Réinitialisation effective du mot de passe et connexion automatique.
     """
     permission_classes = [permissions.AllowAny]
 
@@ -261,17 +412,34 @@ class ResetPasswordView(APIView):
         serializer = ResetPasswordSerializer(data=request.data)
         if serializer.is_valid():
             phone = serializer.validated_data['phone']
-            token = serializer.validated_data['token']
+            code = serializer.validated_data['code']
             new_password = serializer.validated_data['new_password']
             
             try:
                 user = User.objects.get(username=phone)
-                if default_token_generator.check_token(user, token):
+                verification = VerificationCode.objects.filter(
+                    identifier=phone,
+                    code=code,
+                    purpose='PASSWORD_RESET',
+                    is_used=False
+                ).last()
+                
+                if verification and not verification.is_expired():
                     user.set_password(new_password)
                     user.save()
-                    return Response({"message": "Mot de passe réinitialisé avec succès."}, status=status.HTTP_200_OK)
+                    
+                    verification.is_used = True
+                    verification.save()
+                    
+                    # Connexion automatique après reset
+                    tokens = get_tokens_for_user(user)
+                    
+                    return Response({
+                        "message": "Mot de passe réinitialisé avec succès.",
+                        "tokens": tokens
+                    }, status=status.HTTP_200_OK)
                 else:
-                    return Response({"error": "Jeton invalide ou expiré."}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({"error": "Code invalide ou expiré."}, status=status.HTTP_400_BAD_REQUEST)
             except User.DoesNotExist:
                 return Response({"error": "Utilisateur non trouvé."}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,7 +1,34 @@
 from django.db import models
 from django.contrib.auth.models import User
+import random
+import string
+from django.utils import timezone
+from datetime import timedelta
 
 # Create your models here.
+
+class VerificationCode(models.Model):
+    PURPOSE_CHOICES = [
+        ('REGISTER', 'Inscription'),
+        ('PASSWORD_RESET', 'Réinitialisation de mot de passe'),
+    ]
+
+    identifier = models.CharField(max_length=150, help_text="Téléphone ou Email")
+    code = models.CharField(max_length=6)
+    purpose = models.CharField(max_length=20, choices=PURPOSE_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)
+
+    def is_expired(self):
+        # Expire après 10 minutes
+        return timezone.now() > self.created_at + timedelta(minutes=10)
+
+    @staticmethod
+    def generate_code():
+        return ''.join(random.choices(string.digits, k=6))
+
+    def __str__(self):
+        return f"{self.purpose} - {self.identifier} - {self.code}"
 
 
 class RendezVous(models.Model):

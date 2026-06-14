@@ -16,7 +16,9 @@ from .views import (
     RendezVousViewSet,
     AppVersionAPIView,
     ForgotPasswordView,
-    ResetPasswordView
+    ResetPasswordView,
+    RequestCodeView,
+    VerifyCodeView
 )
 
 # Routeur pour les ModelViewSets standards
@@ -45,6 +47,10 @@ urlpatterns = [
     
     # Inscription d'un nouvel utilisateur
     path('auth/register/', RegisterUserView.as_view(), name='auth_register'),
+    
+    # Vérification et demande de code
+    path('auth/request-code/', RequestCodeView.as_view(), name='request_code'),
+    path('auth/verify-code/', VerifyCodeView.as_view(), name='verify_code'),
     
     # Connexion : Obtention du jeton JWT (Email/Téléphone + Password)
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

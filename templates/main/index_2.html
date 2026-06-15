@@ -138,7 +138,7 @@
     <div class="hero-scroll" aria-hidden="true">Défiler</div>
   </header>
 
-  <!-- Stats Bar -->
+  {% comment %} <!-- Stats Bar -->
   <div class="stats-bar">
     <div class="container">
       <div class="stats-grid">
@@ -164,7 +164,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> {% endcomment %}
 
   <!-- ============================================================
        A PROPOS
@@ -225,7 +225,7 @@
               <span class="leader-badge"><i class="fa-solid fa-bolt"></i> Don Pastoral</span>
             </div>
           </article>
-          <article class="leader-card fade-in fade-in-delay-2">
+          {% comment %} <article class="leader-card fade-in fade-in-delay-2">
             <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80" alt="Pasteure Adjointe" class="leader-image" loading="lazy" />
             <div class="leader-info">
               <div class="leader-role">Pasteure Adjointe</div>
@@ -233,7 +233,7 @@
               <p class="leader-bio">Responsable de la louange, du département des femmes et coordinatrice du programme de formation biblique.</p>
               <span class="leader-badge"><i class="fa-solid fa-heart"></i> Ministère des Femmes</span>
             </div>
-          </article>
+          </article> {% endcomment %}
         </div>
       </div>
     </div>
@@ -1322,7 +1322,7 @@
           <p class="section-subtitle">Suivez nos moments forts, recevez des paroles d'édification et partagez la bonne nouvelle avec nous.</p>
           
           <div class="social-platforms">
-            <a href="https://facebook.com" target="_blank" class="social-platform-card facebook">
+            <a href="https://www.facebook.com/WWW.CIMPP.ORG" target="_blank" class="social-platform-card facebook">
               <div class="social-platform-icon"><i class="fa-brands fa-facebook-f"></i></div>
               <div class="social-platform-info">
                 <span class="platform-name">Facebook</span>
@@ -1346,7 +1346,7 @@
               </div>
             </a>
 
-            <a href="https://youtube.com" target="_blank" class="social-platform-card youtube">
+            <a href="https://www.youtube.com/@CIMPPTV" target="_blank" class="social-platform-card youtube">
               <div class="social-platform-icon"><i class="fa-brands fa-youtube"></i></div>
               <div class="social-platform-info">
                 <span class="platform-name">YouTube</span>
@@ -1640,7 +1640,7 @@
     // Charger le verset au chargement de la page
     document.addEventListener('DOMContentLoaded', loadDailyVerse);
 
-    const URL_T = '{% url 'main:submit_temoignage' %}'
+    const URL_T = '{% url 'main:submit_temoignage' %}',
 
   function ouvrirModal(card) {
     const modal = document.getElementById('evenement-modal');

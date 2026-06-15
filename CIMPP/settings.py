@@ -47,9 +47,7 @@ CLOUDINARY_STORAGE ={
     'CLOUD_NAME':os.getenv("CLOUD_NAME"),
     'API_KEY':os.getenv("API_KEY"),
     'API_SECRET':os.getenv("API_SECRET"),
-    'RESSOURCE_TYPE':'auto'  # avec auto cloudinary detecte lui meme si le fichier est une image,une video ou fichier brute
-
-
+    'RESOURCE_TYPE':'auto'  # avec auto cloudinary detecte lui meme si le fichier est une image,une video ou fichier brute
 
 }
 
@@ -59,23 +57,16 @@ CLOUDINARY_STORAGE ={
 # STOCKAGE DES FICHIERS MEDIA → CLOUDINARY
 # ──────────────────────────────────────────────
 
-# On désactive Cloudinary pour le stockage par défaut
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "cloudinary_storage.storage.StaticHashedCloudinaryStorage",
+    },
+}
 
-# Nouvelle configuration via django-storages
-# STORAGES = {
-#     "default": {
-#         "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
-#     },
-#     "staticfiles": {
-#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-#     },
-# }
-
-# # Force Django à signer chaque lien (contourne le mode Private de MinIO)
-# AWS_QUERYSTRING_AUTH = True
-
-# # Paramètres de connexion a Garage
+# Paramètres de connexion a Garage
 # #
 # AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 # AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
@@ -101,6 +92,7 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # Application definition
 
 INSTALLED_APPS = [
+    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -191,12 +183,6 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static/']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# Media files
-# MEDIA_URL = 'media/'
-# MEDIA_ROOT = BASE_DIR / 'media'
-
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

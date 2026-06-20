@@ -11,94 +11,86 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
-import cloudinary #importer en premierer position avec os
 
 import os
 from datetime import timedelta
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 # ──────────────────────────────────────────────
-# CLOUDINARY — initialisation explicite
+# STOCKAGE — Bascule Garage S3 / Cloudinary
 # ──────────────────────────────────────────────
+USE_GARAGE = os.getenv('USE_GARAGE', 'False').lower() == 'true'
 
-cloudinary.config(
-    cloud_name =os.getenv("CLOUD_NAME"),
-    api_key =os.getenv("API_KEY"),
-    api_secret =os.getenv('API_SECRET'),
-    secure =True
-)
+if USE_GARAGE:
+    # ── Garage S3 (scénario hébergement local + tunnel) ──
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL')
+    AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', 'garage')
+    AWS_S3_ADDRESSING_STYLE = 'path'
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_SECURE_URLS = os.getenv('AWS_S3_SECURE_URLS', 'False').lower() == 'true'
+    AWS_QUERYSTRING_AUTH = False
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
+    AWS_S3_URL_PROTOCOL = os.getenv('AWS_S3_URL_PROTOCOL', 'https:')
 
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
+else:
+    # ── Cloudinary (scénario VPS) ──
+    import cloudinary
 
-CLOUDINARY_STORAGE ={
-    'CLOUD_NAME':os.getenv("CLOUD_NAME"),
-    'API_KEY':os.getenv("API_KEY"),
-    'API_SECRET':os.getenv("API_SECRET"),
-    'RESOURCE_TYPE':'auto'  # avec auto cloudinary detecte lui meme si le fichier est une image,une video ou fichier brute
+    cloudinary.config(
+        cloud_name=os.getenv("CLOUD_NAME"),
+        api_key=os.getenv("API_KEY"),
+        api_secret=os.getenv("API_SECRET"),
+        secure=True,
+    )
 
-}
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.getenv("CLOUD_NAME"),
+        'API_KEY': os.getenv("API_KEY"),
+        'API_SECRET': os.getenv("API_SECRET"),
+        'RESOURCE_TYPE': 'auto',
+    }
 
-
-
-# ──────────────────────────────────────────────
-# STOCKAGE DES FICHIERS MEDIA → CLOUDINARY
-# ──────────────────────────────────────────────
-
-# STORAGES = {
-#     "default": {
-#         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-#     },
-#     "staticfiles": {
-#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-#     },
-# }
-# Paramètres de connexion a Garage
-# #
-# AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-# AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-# AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME') #le bucket name creer 
-# AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL')# L'adresse de ton Lab Windows
-
-# AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
-
-# AWS_S3_ADDRESSING_STYLE = "path"
-# AWS_DEFAULT_ACL = None
-
-
-# # Paramètres spécifiques pour éviter les erreurs en local
-# AWS_S3_SECURE_URLS = False       # Pas de HTTPS
-# AWS_QUERYSTRING_AUTH = False     # Garde les liens simples (sans jetons complexes)
-# AWS_S3_FILE_OVERWRITE = False    # Ne pas écraser si le nom est identique
-
-# AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
-# AWS_QUERYSTRING_AUTH = False
-# AWS_S3_URL_PROTOCOL = 'http:'
+    STORAGES = {
+        "default": {
+            "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cloudinary',
     'main',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -107,6 +99,11 @@ INSTALLED_APPS = [
     'api',
     'drf_spectacular',
 ]
+
+if USE_GARAGE:
+    INSTALLED_APPS += ['storages']
+else:
+    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
 
 # if DEBUG:
 #     INSTALLED_APPS += ["django_browser_reload"]
@@ -186,15 +183,6 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
-
 # Authentication Backends
 AUTHENTICATION_BACKENDS = [
     'api.backends.PhoneOrEmailBackend',
@@ -255,10 +243,14 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 # Security headers
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
+    if os.getenv('DISABLE_SSL_REDIRECT', 'False').lower() == 'true':
+        SECURE_SSL_REDIRECT = False
+    else:
+        SECURE_SSL_REDIRECT = True
+        SECURE_HSTS_SECONDS = 31536000
+        SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+        SECURE_HSTS_PRELOAD = True
+        SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

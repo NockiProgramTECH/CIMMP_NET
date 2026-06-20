@@ -9,17 +9,24 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     Sérialiseur pour la création d'un compte utilisateur (Inscription).
     Le 'username' peut être utilisé comme numéro de téléphone.
     """
-    password = serializers.CharField(write_only=True, min_length=6)
+    password = serializers.CharField(write_only=True, min_length=8)
     email = serializers.EmailField(required=True)
 
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password']
 
+    def validate_email(self, value):
+        if User.objects.filter(email__iexact=value).exists():
+            raise serializers.ValidationError("Cet email est déjà utilisé.")
+        return value.lower()
+
+    def validate_username(self, value):
+        if User.objects.filter(username__iexact=value).exists():
+            raise serializers.ValidationError("Ce nom d'utilisateur est déjà pris.")
+        return value
+
     def create(self, validated_data):
-        """
-        Crée un utilisateur avec un mot de passe haché.
-        """
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],

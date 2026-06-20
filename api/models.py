@@ -1,11 +1,9 @@
+import secrets
 from django.db import models
 from django.contrib.auth.models import User
-import random
-import string
 from django.utils import timezone
 from datetime import timedelta
 
-# Create your models here.
 
 class VerificationCode(models.Model):
     PURPOSE_CHOICES = [
@@ -19,13 +17,18 @@ class VerificationCode(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_used = models.BooleanField(default=False)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['identifier', 'purpose', 'is_used']),
+            models.Index(fields=['code']),
+        ]
+
     def is_expired(self):
-        # Expire après 10 minutes
         return timezone.now() > self.created_at + timedelta(minutes=10)
 
     @staticmethod
     def generate_code():
-        return ''.join(random.choices(string.digits, k=6))
+        return ''.join(secrets.choice('0123456789') for _ in range(6))
 
     def __str__(self):
         return f"{self.purpose} - {self.identifier} - {self.code}"
@@ -66,10 +69,13 @@ class AppVersion(models.Model):
         return f"Version {self.version}"
 
     def save(self, *args, **kwargs):
-        # Si on active cette version, on désactive toutes les autres pour n'avoir qu'une seule version active
+        from django.db import transaction
         if self.is_active:
-            AppVersion.objects.filter(is_active=True).update(is_active=False)
-        super(AppVersion, self).save(*args, **kwargs)
+            with transaction.atomic():
+                AppVersion.objects.select_for_update().filter(is_active=True).update(is_active=False)
+                super().save(*args, **kwargs)
+        else:
+            super().save(*args, **kwargs)
 
 
 

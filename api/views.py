@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from django.db.models import Q
 from rest_framework import viewsets, permissions, status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -185,9 +186,8 @@ class EvenementViewSet(viewsets.ModelViewSet):
     - GET (list/retrieve) : Public (AnonReadOnly).
     - POST, PUT, PATCH, DELETE : Admin uniquement (DjangoModelPermissions).
     """
-    queryset = Evenement.objects.all()
+    queryset = Evenement.objects.all().order_by('-date')
     serializer_class = EvenementSerializer
-    # Utilise la permission par défaut : DjangoModelPermissionsOrAnonReadOnly
 
 class PredicationViewSet(viewsets.ModelViewSet):
     """
@@ -195,7 +195,7 @@ class PredicationViewSet(viewsets.ModelViewSet):
     - GET (list/retrieve) : Public.
     - POST, PUT, PATCH, DELETE : Admin uniquement.
     """
-    queryset = Predication.objects.all()
+    queryset = Predication.objects.all().order_by('-date')
     serializer_class = PredicationSerializer
 
 class TemoignagesViewSet(viewsets.ModelViewSet):
@@ -209,18 +209,11 @@ class TemoignagesViewSet(viewsets.ModelViewSet):
     serializer_class = TemoignagesSerializer
 
     def get_permissions(self):
-        """
-        Définit les permissions selon l'action.
-        """
         if self.action == 'create':
             return [permissions.AllowAny()]
         return [permissions.DjangoModelPermissionsOrAnonReadOnly()]
 
     def create(self, request, *args, **kwargs):
-        """
-        Soumission publique d'un témoignage.
-        Forcé à 'published=False' pour la modération.
-        """
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save(published=False)
@@ -234,14 +227,8 @@ class TemoignagesViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_queryset(self):
-        """
-        Filtrage des témoignages :
-        - La liste publique affiche uniquement les témoignages publiés.
-        - Les administrateurs peuvent tout voir.
-        """
         if self.request.user.is_staff:
-            return Temoignages.objects.all()
-        
+            return Temoignages.objects.all().order_by('-created_at')
         if self.action == 'list':
             return Temoignages.objects.filter(published=True).order_by('-created_at')
         return Temoignages.objects.all()
@@ -252,27 +239,18 @@ class RendezVousViewSet(viewsets.ModelViewSet):
     - POST (create) : Reservé aux utilisateurs connectés.
     - GET (list/retrieve) : Reservé aux administrateurs.
     """
-    queryset = RendezVous.objects.all()
+    queryset = RendezVous.objects.all().select_related('user')
     serializer_class = RendezVousSerializer
 
     def get_permissions(self):
-        """
-        Définit les permissions selon l'action.
-        """
         if self.action == 'create':
             return [permissions.IsAuthenticated()]
         return [permissions.IsAdminUser()]
 
     def perform_create(self, serializer):
-        """
-        Associe automatiquement le rendez-vous à l'utilisateur connecté.
-        """
         serializer.save(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        """
-        Surcharge de la création pour retourner un message personnalisé.
-        """
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             self.perform_create(serializer)
@@ -286,11 +264,8 @@ class RendezVousViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_queryset(self):
-        """
-        Seuls les administrateurs voient la liste complète, triée par date de création.
-        """
         if self.request.user.is_staff:
-            return RendezVous.objects.all().order_by('-created_at')
+            return RendezVous.objects.all().select_related('user').order_by('-created_at')
         return RendezVous.objects.none()
 
 
@@ -302,7 +277,7 @@ class ProgrammeHebdoViewSet(viewsets.ModelViewSet):
     - GET : Public.
     - POST, PUT, PATCH, DELETE : Admin.
     """
-    queryset = ProgrammeHebdo.objects.all()
+    queryset = ProgrammeHebdo.objects.all().order_by('ordre')
     serializer_class = ProgrammeHebdoSerializer
 
 class LiveStreamViewSet(viewsets.ModelViewSet):
@@ -315,14 +290,10 @@ class LiveStreamViewSet(viewsets.ModelViewSet):
     serializer_class = LiveStreamSerializer
 
     def list(self, request, *args, **kwargs):
-        """
-        Cas particulier pour le Frontend : retourne le dernier direct actif.
-        Si l'utilisateur est admin et veut la liste réelle, il peut utiliser le paramètre ?all=true
-        """
         if request.user.is_staff and request.query_params.get('all') == 'true':
             return super().list(request, *args, **kwargs)
-            
-        last_live = LiveStream.objects.last()
+
+        last_live = LiveStream.objects.filter(is_live=True).order_by('-updated_at').first()
         if last_live:
             serializer = self.get_serializer(last_live)
             return Response(serializer.data)
@@ -447,16 +418,96 @@ class ResetPasswordView(APIView):
 
 
 
-# À ajouter à la fin de api/views.py
+class HealthCheckView(APIView):
+    """
+    Endpoint de vérification de l'état de santé de l'API.
+    Accessible sans authentification.
+    Retourne le statut de l'API et la configuration minimale.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        from django.db import connection
+        db_ok = True
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT 1")
+        except Exception:
+            db_ok = False
+
+        return Response({
+            "status": "ok" if db_ok else "degraded",
+            "database": "connected" if db_ok else "error",
+            "version": "1.0.0",
+        }, status=status.HTTP_200_OK if db_ok else status.HTTP_503_SERVICE_UNAVAILABLE)
+
+
+class StatisticsView(APIView):
+    """
+    Endpoint public pour obtenir des statistiques globales
+    (nombre de prédications, témoignages, événements).
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        return Response({
+            "predications": Predication.objects.count(),
+            "evenements": Evenement.objects.count(),
+            "temoignages_publics": Temoignages.objects.filter(published=True).count(),
+        })
+
+
+class PredicationSearchView(generics.ListAPIView):
+    """
+    Recherche avancée dans les prédications.
+    Paramètres de requête :
+    - `q` : recherche full-text dans titre, resume, contenu, predicateur
+    - `theme` : filtre par thème exact
+    - `date_from` : filtre par date minimale (YYYY-MM-DD)
+    - `date_to` : filtre par date maximale (YYYY-MM-DD)
+    """
+    serializer_class = PredicationSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        queryset = Predication.objects.all().order_by('-date')
+        q = self.request.query_params.get('q')
+        theme = self.request.query_params.get('theme')
+        date_from = self.request.query_params.get('date_from')
+        date_to = self.request.query_params.get('date_to')
+
+        if q:
+            queryset = queryset.filter(
+                Q(titre__icontains=q) |
+                Q(resume__icontains=q) |
+                Q(contenu__icontains=q) |
+                Q(predicateur__icontains=q)
+            )
+        if theme:
+            queryset = queryset.filter(theme__iexact=theme)
+        if date_from:
+            queryset = queryset.filter(date__gte=date_from)
+        if date_to:
+            queryset = queryset.filter(date__lte=date_to)
+
+        return queryset
+
 
 from django.http import StreamingHttpResponse, Http404
 from django.conf import settings
 import boto3
 
 def serve_media(request, path):
+    if not all([
+        getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+        getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+        getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+    ]):
+        raise Http404("Media storage not configured")
+
     s3 = boto3.client(
         's3',
-        endpoint_url=settings.AWS_S3_ENDPOINT_URL,  #url du serveur de garage(stockage s3)
+        endpoint_url=settings.AWS_S3_ENDPOINT_URL,
         aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
         aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
         region_name=settings.AWS_S3_REGION_NAME,
@@ -467,7 +518,6 @@ def serve_media(request, path):
         content_type = obj.get('ContentType', 'video/mp4')
         file_size = obj['ContentLength']
 
-        # Streaming par chunks de 8MB
         def file_iterator(body, chunk_size=8 * 1024 * 1024):
             while True:
                 chunk = body.read(chunk_size)

@@ -6,8 +6,8 @@ from rest_framework_simplejwt.views import (
 )
 
 from .views import (
-    EvenementViewSet, 
-    PredicationViewSet, 
+    EvenementViewSet,
+    PredicationViewSet,
     TemoignagesViewSet,
     RegisterUserView,
     UserProfileView,
@@ -18,7 +18,10 @@ from .views import (
     ForgotPasswordView,
     ResetPasswordView,
     RequestCodeView,
-    VerifyCodeView
+    VerifyCodeView,
+    HealthCheckView,
+    StatisticsView,
+    PredicationSearchView,
 )
 
 # Routeur pour les ModelViewSets standards
@@ -67,4 +70,9 @@ urlpatterns = [
     # --- Réinitialisation de mot de passe ---
     path('auth/forgot-password/', ForgotPasswordView.as_view(), name='forgot_password'),
     path('auth/reset-password/', ResetPasswordView.as_view(), name='reset_password'),
+
+    # --- Nouveaux endpoints ---
+    path('health/', HealthCheckView.as_view(), name='health_check'),
+    path('statistics/', StatisticsView.as_view(), name='statistics'),
+    path('predications/search/', PredicationSearchView.as_view(), name='predication_search'),
 ]

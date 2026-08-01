@@ -2,7 +2,6 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from main.models import Evenement, Predication, Temoignages, ProgrammeHebdo, LiveStream
 from .models import RendezVous
-import bleach
 
 
 

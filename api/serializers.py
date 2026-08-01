@@ -65,17 +65,17 @@ class TemoignagesSerializer(serializers.ModelSerializer):
     """
     full_name = serializers.ReadOnlyField()
 
-    def validate_first_name(self, value):
-        return bleach.clean(value, tags=ALLOWED_TAGS, strip=True)
+    # def validate_first_name(self, value):
+    #     return bleach.clean(value, tags=ALLOWED_TAGS, strip=True)
 
-    def validate_last_name(self, value):
-        return bleach.clean(value, tags=ALLOWED_TAGS, strip=True)
+    # def validate_last_name(self, value):
+    #     return bleach.clean(value, tags=ALLOWED_TAGS, strip=True)
 
-    def validate_temoignage(self, value):
-        return bleach.clean(value, tags=ALLOWED_TAGS, strip=True)
+    # def validate_temoignage(self, value):
+    #     return bleach.clean(value, tags=ALLOWED_TAGS, strip=True)
 
-    def validate_subjet(self, value):
-        return bleach.clean(value, tags=ALLOWED_TAGS, strip=True)
+    # def validate_subjet(self, value):
+    #     return bleach.clean(value, tags=ALLOWED_TAGS, strip=True)
 
                 
     class Meta:

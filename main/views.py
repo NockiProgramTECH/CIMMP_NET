@@ -1,20 +1,18 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 import json
-from django.views.decorators.csrf import csrf_exempt
 
-# Create your views here.
-
-from .models import *
-
+from .models import (
+    Evenement, Predication, Temoignages,
+    ProgrammeHebdo, LiveStream, Gallery
+)
 
 
 def index(request):
-    events = Evenement.objects.all()
-    #filtrer les 3 dernier predications
-    predications = Predication.objects.filter().order_by('-created_at')[:3]
+    events = Evenement.objects.all().order_by('-date')[:10]
+    predications = Predication.objects.all().order_by('-created_at')[:3]
     temoignages = Temoignages.objects.filter(published=True).order_by('-created_at')[:3]
-    programme_hebdo = ProgrammeHebdo.objects.all()
+    programme_hebdo = ProgrammeHebdo.objects.all().order_by('ordre')
     livestreams = LiveStream.objects.filter(is_live=True).order_by('-updated_at')[:1]
     gallery_images = Gallery.objects.all().order_by('-created_at')[:7]
 
@@ -23,10 +21,11 @@ def index(request):
         'predications': predications,
         'temoignages': temoignages,
         'programme_hebdo': programme_hebdo,
-        'livestreams': livestreams.first(),  # On prend le premier livestream actif
+        'livestreams': livestreams.first(),
         'gallery_images': gallery_images
     }
     return render(request, "main/index_2.html", context)
+
 
 def predications_list(request):
     predications = Predication.objects.all().order_by('-date')[:20]
@@ -36,20 +35,15 @@ def predications_list(request):
     return render(request, "main/predications.html", context)
 
 
-def predication_detail(request,slug):
-    pre_detail =get_object_or_404(Predication,slug=slug)
-  
+def predication_detail(request, slug):
+    pre_detail = get_object_or_404(Predication, slug=slug)
     context = {
         'pre_detail': pre_detail,
-
         'related_predications': Predication.objects.exclude(id=pre_detail.id).order_by('-date')[:5]
     }
-    
-    return render(request,"main/predications_details.html",context)
+    return render(request, "main/predications_details.html", context)
 
-#recevoir les requette ajax (js --->Django)
 
-@csrf_exempt  # ⚠️ à supprimer quand CSRF est actif dans le front-end
 def submit_temoignage(request):
     """Reçoit un témoignage via AJAX JSON POST et stocke en base."""
 
@@ -65,14 +59,12 @@ def submit_temoignage(request):
         cat_temoin = (data.get('categorie') or '').strip()
         message = (data.get('message') or '').strip()
 
-        # Validation côté serveur
         if not all([prenom, nom, telephone, cat_temoin, message]):
             return JsonResponse({'success': False, 'error': 'Champs manquants'}, status=400)
 
         if len(message) < 20:
             return JsonResponse({'success': False, 'error': 'Message trop court (min 20 caractères)'}, status=400)
 
-        # Enregistrement en base de données
         temoignage_obj = Temoignages.objects.create(
             first_name=prenom,
             last_name=nom,
@@ -89,11 +81,9 @@ def submit_temoignage(request):
         return JsonResponse({'success': False, 'error': f'Erreur serveur: {str(e)}'}, status=500)
 
 
-
-
 def live_stream_detail(request, pk):
-   livestream = get_object_or_404(LiveStream, pk=pk)
-   return render(request, 'live_stream_detail.html', {'livestream': livestream})
+    livestream = get_object_or_404(LiveStream, pk=pk)
+    return render(request, 'live_stream_detail.html', {'livestream': livestream})
 
 
 

@@ -296,5 +296,65 @@ Cette API utilise le format JSON pour tous les échanges de données, sauf pour 
 
 ## Codes d'Erreurs
 - `400 Bad Request` : Erreur de validation (ex: champ manquant).
-- `401 Unauthorized` : Token JWT invalide ou expiré.
+- `401 Unauthorized` : Token JWT invalide ou expiré (durée : 30 min).
 - `403 Forbidden` : Tentative d'action admin par un utilisateur standard.
+- `404 Not Found` : Ressource introuvable.
+- `429 Too Many Requests` : Trop de requêtes (limite : 30/min pour les anonymes, 200/min pour les authentifiés).
+- `503 Service Unavailable` : Base de données indisponible.
+
+---
+
+## 7. Nouveaux Endpoints
+
+### Santé de l'API
+- `GET /health/` (Public)
+    - **Sortie (JSON)** :
+    ```json
+    {
+        "status": "ok",
+        "database": "connected",
+        "version": "1.0.0"
+    }
+    ```
+
+### Statistiques
+- `GET /statistics/` (Public)
+    - **Sortie (JSON)** :
+    ```json
+    {
+        "predications": 15,
+        "evenements": 8,
+        "temoignages_publics": 23
+    }
+    ```
+
+### Recherche de Prédications
+- `GET /predications/search/?q=mot&theme=&date_from=&date_to=` (Public)
+    - **Paramètres (query string)** :
+        - `q` : recherche full-text dans titre, résumé, contenu, prédicateur
+        - `theme` : filtre par thème
+        - `date_from` : date minimale (format YYYY-MM-DD)
+        - `date_to` : date maximale (format YYYY-MM-DD)
+    - **Sortie (JSON - liste paginée)** :
+    ```json
+    {
+        "count": 3,
+        "next": "?page=2",
+        "previous": null,
+        "results": [
+            {
+                "id": 1,
+                "titre": "La foi qui déplace les montagnes",
+                "slug": "la-foi-qui-deplace-les-montagnes",
+                "predicateur": "Pasteur Jean",
+                "date": "2026-06-15T10:00:00Z",
+                "resume": "..."
+            }
+        ]
+    }
+    ```
+
+---
+
+## Notes de Version
+**v1.0.0** — Première version stable de l'API avec authentification JWT, CRUD complet, et pagination automatique (20 éléments/page).

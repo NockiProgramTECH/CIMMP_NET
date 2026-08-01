@@ -3,7 +3,9 @@ import urllib.parse
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.text import slugify
 from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
 from django.utils.safestring import mark_safe
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -42,20 +44,15 @@ class VideoMixin:
         
         # Facebook
         if 'facebook.com' in url or 'fb.watch' in url:
-            import urllib.parse
-            
-            # Cas spécial : URL Producer (admin) fournie par l'utilisateur
-            # Exemple: https://www.facebook.com/live/producer/1305078714893341/
             producer_match = re.search(r'live\/producer\/(\d+)', url)
             if producer_match:
                 video_id = producer_match.group(1)
-                # On transforme le lien admin en lien public stable
                 url = f"https://www.facebook.com/video.php?v={video_id}"
-            
+
             encoded_url = urllib.parse.quote(url, safe='')
             return f"https://www.facebook.com/plugins/video.php?href={encoded_url}&show_text=0&adapt_container_width=true&height=315&appId"
 
-        # Bonus: Vimeo
+        # Vimeo
         if 'vimeo.com' in url:
             match = re.search(r'vimeo\.com\/(\d+)', url)
             if match:
@@ -76,8 +73,10 @@ class Predication(models.Model, VideoMixin):
     slug = models.SlugField(unique=True)
     date = models.DateTimeField()
     url_video =models.URLField(blank=True, help_text="URL de la vidéo YouTube ou Facebook")
-    # CHAMP POUR MINIO
-    video_file = models.FileField(upload_to='videos/', blank=True, null=True)
+    video_file = models.FileField(
+        upload_to='videos/', blank=True, null=True,
+        validators=[FileExtensionValidator(['mp4', 'webm', 'ogg', 'mov', 'avi'])]
+    )
 
     @property
     def url(self):
@@ -107,7 +106,7 @@ class Predication(models.Model, VideoMixin):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = self.titre.lower().replace(" ", "-")
+            self.slug = slugify(self.titre)[:50]
         super().save(*args, **kwargs)
     
     def get_absolute_url(self):
@@ -115,12 +114,12 @@ class Predication(models.Model, VideoMixin):
 
 class Evenement(models.Model):
     name = models.CharField(max_length=100)
-    slug =models.SlugField(unique=True)
+    slug = models.SlugField(unique=True)
     description = models.TextField()
-    date =models.DateTimeField()
-    lieu =models.CharField(max_length =25,default ="Eglise CIMPP")
+    date = models.DateTimeField()
+    lieu = models.CharField(max_length=25, default="Eglise CIMPP")
     image = models.ImageField(upload_to='evenements/', blank=True, null=True)
-    created_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -133,7 +132,7 @@ class Evenement(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = self.name.lower().replace(" ", "-")
+            self.slug = slugify(self.name)[:50]
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -142,7 +141,7 @@ class Evenement(models.Model):
 class Temoignages(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    phone =models.CharField(max_length =10)
+    phone = models.CharField(max_length=20)
     subjet =models.CharField(max_length=50)
     temoignage =models.TextField()
     created_at  =models.DateTimeField(auto_created=True,default=timezone.now)

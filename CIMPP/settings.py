@@ -11,102 +11,103 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
-import cloudinary #importer en premierer position avec os
 
 import os
 from datetime import timedelta
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['*']
-
-# ──────────────────────────────────────────────
-# CLOUDINARY — initialisation explicite
-# ──────────────────────────────────────────────
-
-cloudinary.config(
-    cloud_name =os.getenv("CLOUD_NAME"),
-    api_key =os.getenv("API_KEY"),
-    api_secret =os.getenv('API_SECRET'),
-    secure =True
-)
-
-
-CLOUDINARY_STORAGE ={
-    'CLOUD_NAME':os.getenv("CLOUD_NAME"),
-    'API_KEY':os.getenv("API_KEY"),
-    'API_SECRET':os.getenv("API_SECRET"),
-    'RESOURCE_TYPE':'auto'  # avec auto cloudinary detecte lui meme si le fichier est une image,une video ou fichier brute
-
-}
-
-
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+# Fallback Render : permet à l'app de tourner même si l'env var n'est pas encore propagée
+RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS += [RENDER_EXTERNAL_HOSTNAME]
 
 # ──────────────────────────────────────────────
-# STOCKAGE DES FICHIERS MEDIA → CLOUDINARY
+# STOCKAGE — Bascule Garage S3 / Cloudinary
 # ──────────────────────────────────────────────
+USE_GARAGE = os.getenv('USE_GARAGE', 'False').lower() == 'true'
 
-STORAGES = {
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "cloudinary_storage.storage.StaticHashedCloudinaryStorage",
-    },
-}
+if USE_GARAGE:
+    # ── Garage S3 (scénario hébergement local + tunnel) ──
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL')
+    AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', 'garage')
+    AWS_S3_ADDRESSING_STYLE = 'path'
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_SECURE_URLS = os.getenv('AWS_S3_SECURE_URLS', 'False').lower() == 'true'
+    AWS_QUERYSTRING_AUTH = False
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
+    AWS_S3_URL_PROTOCOL = os.getenv('AWS_S3_URL_PROTOCOL', 'https:')
 
-# Paramètres de connexion a Garage
-# #
-# AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-# AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-# AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME') #le bucket name creer 
-# AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL')# L'adresse de ton Lab Windows
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
+else:
+    # ── Cloudinary (scénario VPS) ──
+    import cloudinary
 
-# AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
+    cloudinary.config(
+        cloud_name=os.getenv("CLOUD_NAME"),
+        api_key=os.getenv("API_KEY"),
+        api_secret=os.getenv("API_SECRET"),
+        secure=True,
+    )
 
-# AWS_S3_ADDRESSING_STYLE = "path"
-# AWS_DEFAULT_ACL = None
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.getenv("CLOUD_NAME"),
+        'API_KEY': os.getenv("API_KEY"),
+        'API_SECRET': os.getenv("API_SECRET"),
+        'RESOURCE_TYPE': 'auto',
+    }
 
-
-# # Paramètres spécifiques pour éviter les erreurs en local
-# AWS_S3_SECURE_URLS = False       # Pas de HTTPS
-# AWS_QUERYSTRING_AUTH = False     # Garde les liens simples (sans jetons complexes)
-# AWS_S3_FILE_OVERWRITE = False    # Ne pas écraser si le nom est identique
-
-# AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
-# AWS_QUERYSTRING_AUTH = False
-# AWS_S3_URL_PROTOCOL = 'http:'
+    STORAGES = {
+        "default": {
+            "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cloudinary',                   # ← APRÈS staticfiles
     'main',
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
     'api',
     'drf_spectacular',
 ]
+
+if USE_GARAGE:
+    INSTALLED_APPS += ['storages']
+else:
+    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
 
 # if DEBUG:
 #     INSTALLED_APPS += ["django_browser_reload"]
@@ -160,7 +161,7 @@ DATABASES = {
         'PORT':     os.getenv('DB_PORT',default=3306),
         'CONN_MAX_AGE': 600, # Garde la connexion ouverte 10 minutes
         'OPTIONS': {
-            'ssl': {'ca': None},
+            'ssl': {'ca': os.getenv('DB_SSL_CA') or None},
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
     }
@@ -201,6 +202,16 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '30/minute',
+        'user': '200/minute',
+    },
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
 }
 
 SPECTACULAR_SETTINGS = {
@@ -213,21 +224,37 @@ SPECTACULAR_SETTINGS = {
 
 # Simple JWT configuration
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=365),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=365),
-    'ROTATE_REFRESH_TOKENS': False,
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = DEBUG
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://127.0.0.1:8000,http://localhost:8000').split(',')
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'lankoandeenock002@gmail.com'
-EMAIL_HOST_PASSWORD = 'gyjqaxhgxhbvhydc' # Use App Password for Gmail
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+# Security headers
+if not DEBUG:
+    if os.getenv('DISABLE_SSL_REDIRECT', 'False').lower() == 'true':
+        SECURE_SSL_REDIRECT = False
+    else:
+        SECURE_SSL_REDIRECT = True
+        SECURE_HSTS_SECONDS = 31536000
+        SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+        SECURE_HSTS_PRELOAD = True
+        SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True

@@ -1,14 +1,12 @@
-from django.shortcuts import render
+# from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.db.models import Q
 from rest_framework import viewsets, permissions, status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.utils.decorators import method_decorator
 
 
 
@@ -502,18 +500,18 @@ class PredicationSearchView(generics.ListAPIView):
 
         return queryset
 
-
+"""
 from django.shortcuts import redirect
 from django.http import Http404
 from django.conf import settings
 import boto3
 
 def serve_media(request, path):
-    """
+  
     Génère une URL pré-signée Garage S3 et redirige le client directement vers elle.
     Django ne touche plus au fichier — chaque requête est traitée en ~2ms.
     Supporte des centaines d'utilisateurs simultanés sans bloquer de worker.
-    """
+   
     if not all([
         getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
         getattr(settings, 'AWS_ACCESS_KEY_ID', None),
@@ -543,3 +541,4 @@ def serve_media(request, path):
         return response
     except Exception:
         raise Http404
+ """

@@ -22,13 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
+DEBUG = False #+os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
+ALLOWED_HOSTS = ['*']
 # Fallback Render : permet à l'app de tourner même si l'env var n'est pas encore propagée
-RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS += [RENDER_EXTERNAL_HOSTNAME]
+# RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
+# if RENDER_EXTERNAL_HOSTNAME:
+#     ALLOWED_HOSTS += [RENDER_EXTERNAL_HOSTNAME]
 
 # ──────────────────────────────────────────────
 # STOCKAGE — Bascule Garage S3 / Cloudinary
@@ -152,18 +153,18 @@ WSGI_APPLICATION = 'CIMPP.wsgi.application'
 # ──────────────────────────────────────────────
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':     os.getenv('DB_NAME',default=' cimppdb '),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME':     'db.sqlite3',#os.getenv('DB_NAME',default='CIMPP_DB'),
         #CIMPP_DB
-        'USER':     os.getenv('DB_USER',default='root'),
-        'PASSWORD': os.getenv('DB_PASSWORD',default='root'),
-        'HOST':     os.getenv('DB_HOST',default='127.0.0.1'),
-        'PORT':     os.getenv('DB_PORT',default=3306),
-        'CONN_MAX_AGE': 600, # Garde la connexion ouverte 10 minutes
-        'OPTIONS': {
-            'ssl': {'ca': os.getenv('DB_SSL_CA') or None},
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+        # 'USER':   os.getenv('DB_USER',default='root'),
+        # 'PASSWORD': os.getenv('DB_PASSWORD',default='1234'),
+        # 'HOST':     os.getenv('DB_HOST',default='127.0.0.1'),
+        # 'PORT':     os.getenv('DB_PORT',default=3306),
+        # 'CONN_MAX_AGE': 600, # Garde la connexion ouverte 10 minutes
+        # 'OPTIONS': {
+        #     'ssl': {'ca': os.getenv('DB_SSL_CA') or None},
+        #     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        # },
     }
 }
 # Password validation
@@ -233,9 +234,9 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# CORS settings
-CORS_ALLOW_ALL_ORIGINS = DEBUG
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://127.0.0.1:8000,http://localhost:8000').split(',')
+# # CORS settings
+# CORS_ALLOW_ALL_ORIGINS = DEBUG
+# CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://127.0.0.1:8000,http://localhost:8000').split(',')
 
 
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
@@ -245,16 +246,26 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
-# Security headers
-if not DEBUG:
-    if os.getenv('DISABLE_SSL_REDIRECT', 'False').lower() == 'true':
-        SECURE_SSL_REDIRECT = False
-    else:
-        SECURE_SSL_REDIRECT = True
-        SECURE_HSTS_SECONDS = 31536000
-        SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-        SECURE_HSTS_PRELOAD = True
-        SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# # Security headers
+# if not DEBUG:
+#     if os.getenv('DISABLE_SSL_REDIRECT', 'False').lower() == 'true':
+#         SECURE_SSL_REDIRECT = False
+#     else:
+#         SECURE_SSL_REDIRECT = True
+#         SECURE_HSTS_SECONDS = 31536000
+#         SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#         SECURE_HSTS_PRELOAD = True
+#         SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+#     SESSION_COOKIE_SECURE = True
+#     CSRF_COOKIE_SECURE = True
+
+
+
+# # Cacher la technologie utilisée
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# SECURE_BROWSER_XSS_FILTER = True
+# X_FRAME_OPTIONS = 'DENY'
+
+# # Content Security Policy
+# CSP_DEFAULT_SRC = ("'self'",)

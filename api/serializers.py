@@ -2,7 +2,11 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from main.models import Evenement, Predication, Temoignages, ProgrammeHebdo, LiveStream
 from .models import RendezVous
+import bleach
 
+
+
+ALLOWED_TAGS = []  # Aucune balise HTML autorisée
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     """
@@ -61,11 +65,24 @@ class TemoignagesSerializer(serializers.ModelSerializer):
     """
     full_name = serializers.ReadOnlyField()
 
+    def validate_first_name(self, value):
+        return bleach.clean(value, tags=ALLOWED_TAGS, strip=True)
+
+    def validate_last_name(self, value):
+        return bleach.clean(value, tags=ALLOWED_TAGS, strip=True)
+
+    def validate_temoignage(self, value):
+        return bleach.clean(value, tags=ALLOWED_TAGS, strip=True)
+
+    def validate_subjet(self, value):
+        return bleach.clean(value, tags=ALLOWED_TAGS, strip=True)
+
+                
     class Meta:
         model = Temoignages
         fields = [
             'id', 'first_name', 'last_name', 'full_name', 
-            'phone', 'subjet', 'temoignage', 'created_at', 'published'
+            'subjet', 'temoignage', 'created_at', 'published'
         ]
         read_only_fields = ['created_at']
     
@@ -74,6 +91,8 @@ class TemoignagesSerializer(serializers.ModelSerializer):
         Crée un témoignage. Par défaut, published est False via la vue.
         """
         return Temoignages.objects.create(**validated_data)
+    
+
 
 
 class ProgrammeHebdoSerializer(serializers.ModelSerializer):

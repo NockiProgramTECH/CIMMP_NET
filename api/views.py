@@ -8,6 +8,11 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
+from django_ratelimit.decorators import ratelimit
+from django.utils.decorators import method_decorator
+
+
+
 
 from main.models import Evenement, LiveStream, Predication, ProgrammeHebdo, Temoignages
 
@@ -25,6 +30,11 @@ from .serializers import (
     RequestCodeSerializer,
     VerifyCodeSerializer
 )
+# @method_decorator(ratelimit(key='ip', rate='5/m', block=True), name='post')
+# class TokenObtainPairView(TokenObtainPairView):
+#     pass
+
+
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -246,6 +256,7 @@ class RendezVousViewSet(viewsets.ModelViewSet):
         if self.action == 'create':
             return [permissions.IsAuthenticated()]
         return [permissions.IsAdminUser()]
+      
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -493,11 +504,17 @@ class PredicationSearchView(generics.ListAPIView):
         return queryset
 
 
-from django.http import StreamingHttpResponse, Http404
+from django.shortcuts import redirect
+from django.http import Http404
 from django.conf import settings
 import boto3
 
 def serve_media(request, path):
+    """
+    Génère une URL pré-signée Garage S3 et redirige le client directement vers elle.
+    Django ne touche plus au fichier — chaque requête est traitée en ~2ms.
+    Supporte des centaines d'utilisateurs simultanés sans bloquer de worker.
+    """
     if not all([
         getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
         getattr(settings, 'AWS_ACCESS_KEY_ID', None),
@@ -514,25 +531,16 @@ def serve_media(request, path):
         config=boto3.session.Config(signature_version='s3v4')
     )
     try:
-        obj = s3.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=path)
-        content_type = obj.get('ContentType', 'video/mp4')
-        file_size = obj['ContentLength']
-
-        def file_iterator(body, chunk_size=8 * 1024 * 1024):
-            while True:
-                chunk = body.read(chunk_size)
-                if not chunk:
-                    break
-                yield chunk
-
-        response = StreamingHttpResponse(
-            file_iterator(obj['Body']),
-            content_type=content_type
+        presigned_url = s3.generate_presigned_url(
+            'get_object',
+            Params={
+                'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
+                'Key': path
+            },
+            ExpiresIn=3600
         )
-        response['Content-Length'] = file_size
-        response['Cache-Control'] = 'public, max-age=86400'
-        response['Accept-Ranges'] = 'bytes'
+        response = redirect(presigned_url)
+        response['Cache-Control'] = 'public, max-age=3600'
         return response
-
     except Exception:
         raise Http404

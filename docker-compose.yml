@@ -10,4 +10,4 @@ services:
     # En développement, on peut utiliser le serveur interne pour le hot-reload
     # command: python manage.py runserver 0.0.0.0:8000
     # En production (ou test Docker final) :
-    command: gunicorn --bind 0.0.0.0:8000 CIMPP.wsgi:application
+    command: gunicorn --bind 0.0.0.0:8000 --workers 17 --worker-class gthread --threads 4 --timeout 120 --keep-alive 5 --max-requests 1000 --max-requests-jitter 100 CIMPP.wsgi:application
